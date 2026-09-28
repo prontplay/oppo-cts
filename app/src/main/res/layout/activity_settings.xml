@@ -36,7 +36,7 @@
                 android:text="更新" />
         </LinearLayout>
 
-        <!-- ステータス一覧カード（GMS削除済み） -->
+        <!-- メインステータス一覧カード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,57 +165,7 @@
                             android:text="ストア" />
                     </LinearLayout>
 
-                    <!-- 4. Shizuku -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp">
-                        <TextView
-                            android:id="@+id/tv_shizuku_status"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="15sp"
-                            android:text="Shizuku: 実行中" />
-                        <Button
-                            android:id="@+id/btn_shizuku_launch"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp"
-                            android:textSize="12sp"
-                            android:text="起動" />
-                    </LinearLayout>
-
-                    <!-- 5. GMSフラグ -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp">
-                        <TextView
-                            android:id="@+id/tv_flag_status"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="15sp"
-                            android:text="✅ GMSフラグ" />
-                        <Button
-                            android:id="@+id/btn_reapply_flag"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp"
-                            android:textSize="12sp"
-                            android:text="設定" />
-                    </LinearLayout>
-
-                    <!-- 6. アシスタント (ステップ6に合わせて繰り上げ) -->
+                    <!-- 4. アシスタント -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -240,7 +190,7 @@
                             android:text="設定" />
                     </LinearLayout>
 
-                    <!-- 7. 重ねて表示 -->
+                    <!-- 5. 重ねて表示 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -265,7 +215,7 @@
                             android:text="設定" />
                     </LinearLayout>
 
-                    <!-- 8. ユーザー補助 -->
+                    <!-- 6. ユーザー補助 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -290,7 +240,7 @@
                             android:text="設定" />
                     </LinearLayout>
 
-                    <!-- 9. バックグラウンド -->
+                    <!-- 7. バックグラウンド -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -336,7 +286,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- トリガー設定カード -->
+        <!-- かこって検索の起動方法カード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -486,6 +436,122 @@
                     android:text="CTS起動テスト (即時実行)"
                     android:layout_marginTop="16dp"
                     android:visibility="gone" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 高度な設定カード（常時閉じたアコーディオン、エラー時も勝手に開かない） -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- アコーディオンヘッダー -->
+                <LinearLayout
+                    android:id="@+id/layout_advanced_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="高度な設定 (Shizuku / フラグ)"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_advanced_accordion_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="▼"
+                        android:textSize="16sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="4dp" />
+                </LinearLayout>
+
+                <!-- アコーディオン詳細コンテナ（開閉対象・初期値は完全非表示） -->
+                <LinearLayout
+                    android:id="@+id/layout_advanced_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CTSの機能制限解除やADB連携を行う設定です。通常は変更不要です。"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Shizuku -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_shizuku_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="Shizuku: 実行中" />
+                        <Button
+                            android:id="@+id/btn_shizuku_launch"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="起動" />
+                    </LinearLayout>
+
+                    <!-- GMSフラグ -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_flag_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ GMSフラグ" />
+                        <Button
+                            android:id="@+id/btn_reapply_flag"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="設定" />
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
