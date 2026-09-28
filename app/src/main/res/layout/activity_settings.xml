@@ -20,7 +20,7 @@
             android:textStyle="bold"
             android:layout_marginBottom="20dp" />
 
-        <!-- ステータスカード -->
+        <!-- ステータス一覧カード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,8 +42,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ステータス"
-                        android:textSize="18sp"
+                        android:text="ステータス (タップで設定へ移動)"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Button
@@ -59,41 +59,54 @@
                     android:id="@+id/tv_google_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Google アプリ: 確認中..."
-                    android:layout_marginBottom="8dp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="Google アプリ: 確認中..." />
 
                 <TextView
                     android:id="@+id/tv_gms_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="GMS: 確認中..."
-                    android:layout_marginBottom="8dp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="GMS: 確認中..." />
 
                 <TextView
                     android:id="@+id/tv_shizuku_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Shizuku: 確認中..."
-                    android:layout_marginBottom="8dp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="Shizuku: 確認中..." />
 
                 <TextView
                     android:id="@+id/tv_accessibility_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ユーザー補助: 確認中..."
-                    android:layout_marginBottom="8dp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="ユーザー補助: 確認中..." />
 
                 <TextView
                     android:id="@+id/tv_assistant_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="アシスタント: 確認中..."
-                    android:layout_marginBottom="8dp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="アシスタント: 確認中..." />
 
                 <TextView
                     android:id="@+id/tv_flag_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
                     android:text="GMSフラグ: 確認中..." />
 
             </LinearLayout>
@@ -141,9 +154,10 @@
                     android:text="判定エリアを可視化（赤色表示）" />
 
                 <TextView
+                    android:id="@+id/tv_height_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="バーの厚み (高さ)"
+                    android:text="バーの厚み (高さ): 70px"
                     android:layout_marginTop="12dp" />
 
                 <SeekBar
@@ -153,16 +167,17 @@
                     android:max="150" />
 
                 <TextView
+                    android:id="@+id/tv_offset_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Y軸オフセット (上下位置)"
+                    android:text="Y軸オフセット (下への突き当て調整): 0px"
                     android:layout_marginTop="12dp" />
 
                 <SeekBar
                     android:id="@+id/seekbar_overlay_offset"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="100" />
+                    android:max="200" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -184,7 +199,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="操作 &amp; テスト"
+                    android:text="操作 &amp; 権限設定"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
@@ -201,6 +216,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ユーザー補助設定を開く"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btn_open_overlay_permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="重ねて表示の権限を開く"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btn_open_battery_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="バックグラウンド実行（電池設定）を開く"
                     android:layout_marginBottom="8dp" />
 
                 <Button
