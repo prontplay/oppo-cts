@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
@@ -17,7 +18,7 @@ import rikka.shizuku.Shizuku
 class SetupWizardActivity : AppCompatActivity() {
 
     private var currentStep = 1
-    private val totalSteps = 7
+    private val totalSteps = 9 // 権限設定を追加して全9ステップに拡張
 
     private lateinit var tvStepTitle: TextView
     private lateinit var tvStepDesc: TextView
@@ -76,7 +77,6 @@ class SetupWizardActivity : AppCompatActivity() {
         updateUI()
     }
 
-    // Oppo AppMarketを完全に回避し、Google Playストアを明示的に起動
     private fun openGooglePlayStore(pkg: String) {
         val playStorePkg = "com.android.vending"
         try {
@@ -85,11 +85,10 @@ class SetupWizardActivity : AppCompatActivity() {
             }
             startActivity(intent)
         } catch (e: Exception) {
-            // Playストア自体がない場合はブラウザ経由でPlayストアWebを開く
             try {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$pkg")))
             } catch (ex: Exception) {
-                Toast.makeText(this, "ストアを開けませんでした", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Playストアを開けませんでした", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -106,25 +105,30 @@ class SetupWizardActivity : AppCompatActivity() {
     private fun updateUI() {
         btnBack.visibility = if (currentStep == 1) View.GONE else View.VISIBLE
         btnNext.text = if (currentStep == totalSteps) "完了" else "次へ"
-        rgTriggerChoice.visibility = if (currentStep == 7) View.VISIBLE else View.GONE
+        rgTriggerChoice.visibility = if (currentStep == 9) View.VISIBLE else View.GONE
 
         when (currentStep) {
             1 -> {
-                tvStepTitle.text = "ステップ 1: GMS（Googleサービス）を有効化"
-                tvStepDesc.text = "ColorOSではGoogleサービスがオフになっている場合があります。\n\n端末の [設定] → [システムおよび更新] → [Google設定] を開き、Googleサービスが有効になっていることを確認してください。"
-                btnAction.text = "設定を開く"
+                tvStepTitle.text = "ステップ 1: GMS（Google設定）の有効化"
+                tvStepDesc.text = "ColorOSでGoogleサービスが有効になっていることを確認します。\n\n下のボタンを押してGoogle設定を開いてください（開かない場合は [設定] → [システムおよび更新] → [Google設定] を直接確認してください）。"
+                btnAction.text = "Google設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
                     try {
-                        startActivity(Intent(Settings.ACTION_SETTINGS))
+                        val intent = Intent("com.google.android.gms.settings.GOOGLE_SETTINGS")
+                        startActivity(intent)
                     } catch (e: Exception) {
-                        Toast.makeText(this, "設定アプリを開けませんでした", Toast.LENGTH_SHORT).show()
+                        try {
+                            startActivity(Intent(Settings.ACTION_SYNC_SETTINGS))
+                        } catch (ex: Exception) {
+                            startActivity(Intent(Settings.ACTION_SETTINGS))
+                        }
                     }
                 }
             }
             2 -> {
-                tvStepTitle.text = "ステップ 2: Googleアプリをインストール"
-                tvStepDesc.text = "Circle to Search（かこって検索）はGoogleアプリに内包されています。\n\nGoogle Playストアから最新の「Google」アプリをインストールまたは更新してください。"
+                tvStepTitle.text = "ステップ 2: Googleアプリのインストール"
+                tvStepDesc.text = "かこって検索機能はGoogleアプリに内包されています。\n\nPlayストアから最新の「Google」アプリをインストールまたは更新してください。"
                 btnAction.text = "Playストアで開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
@@ -133,7 +137,7 @@ class SetupWizardActivity : AppCompatActivity() {
             }
             3 -> {
                 tvStepTitle.text = "ステップ 3: Shizukuのインストールと起動"
-                tvStepDesc.text = "ColorOSの権限制限を回避するためにShizuku（ADB権限）が必要です。\n\nShizukuを起動してワイヤレスデバッグ等で「実行中」にした後、[確認]を押して権限を許可してください。"
+                tvStepDesc.text = "ColorOSのシステム制限を回避するためにShizuku（ADB権限）が必要です。\n\nShizukuを起動してワイヤレスデバッグで実行中にしてから [確認] を押してください。"
                 btnAction.text = "確認 / 権限リクエスト"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
@@ -158,7 +162,23 @@ class SetupWizardActivity : AppCompatActivity() {
                 }
             }
             4 -> {
-                tvStepTitle.text = "ステップ 4: デフォルトアシスタントの変更"
+                tvStepTitle.text = "ステップ 4: 重ねて表示（オーバーレイ）の許可"
+                tvStepDesc.text = "画面最下部のナビゲーションバー上に透明な長押し判定エリアを常駐させるため、「他のアプリの上に重ねて表示」の権限を許可してください。"
+                btnAction.text = "重ねて表示の設定を開く"
+                btnAction.visibility = View.VISIBLE
+                btnAction.setOnClickListener {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        try {
+                            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
+                        }
+                    }
+                }
+            }
+            5 -> {
+                tvStepTitle.text = "ステップ 5: デフォルトアシスタントの変更"
                 tvStepDesc.text = "かこって検索を利用するには、端末のデジタルアシスタントをGoogleに指定する必要があります。\n\n[適用]を押すとShizukuを使ってアシスタントをGoogleに変更します。"
                 btnAction.text = "適用"
                 btnAction.visibility = View.VISIBLE
@@ -171,9 +191,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            5 -> {
-                tvStepTitle.text = "ステップ 5: GMSフラグの設定"
-                tvStepDesc.text = "中国版端末のGoogleアプリ内でロックされているCTS機能を、Shizuku経由で強制解除します。"
+            6 -> {
+                tvStepTitle.text = "ステップ 6: GMSフラグの設定"
+                tvStepDesc.text = "中国版端末のGoogleアプリ内で制限されているCircle to Search機能を、Shizuku経由で強制有効化します。"
                 btnAction.text = "適用"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
@@ -192,17 +212,26 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            6 -> {
-                tvStepTitle.text = "ステップ 6: Geminiのインストール (任意)"
-                tvStepDesc.text = "Geminiアシスタントを使用したい場合はインストールしてください（スキップして「次へ」進んでもCTSは動作します）。"
+            7 -> {
+                tvStepTitle.text = "ステップ 7: Geminiのインストール (任意)"
+                tvStepDesc.text = "最新のGeminiをアシスタントとして使用したい場合はインストールしてください（スキップして「次へ」進んでもCTSは動作します）。"
                 btnAction.text = "Playストアで開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
                     openGooglePlayStore("com.google.android.apps.bard")
                 }
             }
-            7 -> {
-                tvStepTitle.text = "ステップ 7: トリガー方式の選択"
+            8 -> {
+                tvStepTitle.text = "ステップ 8: ユーザー補助の有効化"
+                tvStepDesc.text = "ジェスチャーやキー入力を安定して検知させるため、ユーザー補助設定から「OPPO CTS」をONにしてください。"
+                btnAction.text = "ユーザー補助設定を開く"
+                btnAction.visibility = View.VISIBLE
+                btnAction.setOnClickListener {
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                }
+            }
+            9 -> {
+                tvStepTitle.text = "ステップ 9: トリガー方式の選択"
                 tvStepDesc.text = "CTSの起動方法を選択してください（後から設定画面でいつでも変更可能です）。"
                 btnAction.visibility = View.GONE
             }
