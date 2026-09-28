@@ -23,18 +23,32 @@ import rikka.shizuku.Shizuku
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var layoutStatusHeader: LinearLayout
+    private lateinit var tvMainStatusHeader: TextView
+    private lateinit var tvAccordionIndicator: TextView
+    private lateinit var layoutStatusDetails: LinearLayout
+
     private lateinit var tvGmsStatus: TextView
     private lateinit var tvGoogleStatus: TextView
     private lateinit var tvGeminiStatus: TextView
     private lateinit var tvShizukuStatus: TextView
     private lateinit var tvFlagStatus: TextView
+    private lateinit var btnReapplyFlag: Button
     private lateinit var tvOverlayPermissionStatus: TextView
     private lateinit var tvAccessibilityStatus: TextView
     private lateinit var tvAssistantStatus: TextView
     private lateinit var tvBatteryStatus: TextView
+    private lateinit var btnBatterySettings: Button
 
     private lateinit var tvHeightLabel: TextView
     private lateinit var tvOffsetLabel: TextView
+    private lateinit var tvDelayLabel: TextView
+
+    private lateinit var layoutOverlaySettings: LinearLayout
+    private lateinit var layoutTileDesc: LinearLayout
+    private lateinit var layoutShortcutDesc: LinearLayout
+    private lateinit var layoutDelaySettings: LinearLayout
+    private lateinit var seekbarTriggerDelay: SeekBar
 
     private lateinit var btnTestCts: Button
     private lateinit var btnRerunSetup: Button
@@ -44,6 +58,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchOverlayDebug: SwitchMaterial
     private lateinit var seekbarOverlayOffset: SeekBar
     private lateinit var seekbarOverlayHeight: SeekBar
+
+    private var isAccordionExpanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,18 +79,32 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        layoutStatusHeader = findViewById(R.id.layout_status_header)
+        tvMainStatusHeader = findViewById(R.id.tv_main_status_header)
+        tvAccordionIndicator = findViewById(R.id.tv_accordion_indicator)
+        layoutStatusDetails = findViewById(R.id.layout_status_details)
+
         tvGmsStatus = findViewById(R.id.tv_gms_status)
         tvGoogleStatus = findViewById(R.id.tv_google_status)
         tvGeminiStatus = findViewById(R.id.tv_gemini_status)
         tvShizukuStatus = findViewById(R.id.tv_shizuku_status)
         tvFlagStatus = findViewById(R.id.tv_flag_status)
+        btnReapplyFlag = findViewById(R.id.btn_reapply_flag)
         tvOverlayPermissionStatus = findViewById(R.id.tv_overlay_permission_status)
         tvAccessibilityStatus = findViewById(R.id.tv_accessibility_status)
         tvAssistantStatus = findViewById(R.id.tv_assistant_status)
         tvBatteryStatus = findViewById(R.id.tv_battery_status)
+        btnBatterySettings = findViewById(R.id.btn_battery_settings)
 
         tvHeightLabel = findViewById(R.id.tv_height_label)
         tvOffsetLabel = findViewById(R.id.tv_offset_label)
+        tvDelayLabel = findViewById(R.id.tv_delay_label)
+
+        layoutOverlaySettings = findViewById(R.id.layout_overlay_settings)
+        layoutTileDesc = findViewById(R.id.layout_tile_desc)
+        layoutShortcutDesc = findViewById(R.id.layout_shortcut_desc)
+        layoutDelaySettings = findViewById(R.id.layout_delay_settings)
+        seekbarTriggerDelay = findViewById(R.id.seekbar_trigger_delay)
 
         btnTestCts = findViewById(R.id.btn_test_cts)
         btnRerunSetup = findViewById(R.id.btn_rerun_setup)
@@ -90,7 +120,9 @@ class SettingsActivity : AppCompatActivity() {
         spinnerTriggerMethod.adapter = adapter
 
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
-        spinnerTriggerMethod.setSelection(prefs.getInt("trigger_method", 0))
+        val method = prefs.getInt("trigger_method", 0)
+        spinnerTriggerMethod.setSelection(method)
+        updateTriggerMethodUI(method)
 
         val currentHeight = prefs.getInt("trigger_height_px", 70)
         seekbarOverlayHeight.progress = currentHeight
@@ -100,11 +132,20 @@ class SettingsActivity : AppCompatActivity() {
         seekbarOverlayOffset.progress = currentOffset + 100
         tvOffsetLabel.text = "トリガー位置の調整: ${currentOffset}px"
 
+        val delayMs = prefs.getInt("trigger_delay_ms", 200)
+        seekbarTriggerDelay.progress = (delayMs / 100).coerceIn(0, 10)
+        tvDelayLabel.text = "起動遅延時間: ${delayMs}ms"
+
         switchOverlayDebug.isChecked = prefs.getBoolean("overlay_debug", false)
     }
 
     private fun setupListeners() {
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
+
+        // ② アコーディオン開閉リスナー
+        layoutStatusHeader.setOnClickListener {
+            toggleAccordion(!isAccordionExpanded)
+        }
 
         btnRefresh.setOnClickListener { updateStatus() }
 
@@ -123,9 +164,34 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        // ③ GMSフラグ再適用ボタン
+        btnReapplyFlag.setOnClickListener {
+            try {
+                val method = GmsFlagSetter::class.java.methods.firstOrNull { it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType }
+                method?.invoke(null)
+                Toast.makeText(this, "GMSフラグを再適用しました", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(this, "再適用完了", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // ④ バックグラウンド実行設定ボタン
+        btnBatterySettings.setOnClickListener {
+            try {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.parse("package:$packageName")
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                startActivity(Intent(Settings.ACTION_SETTINGS))
+            }
+        }
+
+        // ⑤⑥ トリガー方式の切り替えとUI制御
         spinnerTriggerMethod.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 prefs.edit().putInt("trigger_method", position).apply()
+                updateTriggerMethodUI(position)
                 if (position == 0) {
                     checkAndStartOverlay()
                 } else {
@@ -165,6 +231,51 @@ class SettingsActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+
+        // ⑤⑥ 遅延タイマースライダー（0〜1000ms）
+        seekbarTriggerDelay.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val ms = progress * 100
+                    tvDelayLabel.text = "起動遅延時間: ${ms}ms"
+                    prefs.edit().putInt("trigger_delay_ms", ms).apply()
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+    }
+
+    private fun toggleAccordion(expand: Boolean) {
+        isAccordionExpanded = expand
+        layoutStatusDetails.visibility = if (expand) View.VISIBLE else View.GONE
+        tvAccordionIndicator.text = if (expand) "▲" else "▼"
+    }
+
+    private fun updateTriggerMethodUI(method: Int) {
+        when (method) {
+            0 -> {
+                // ナビバー長押し
+                layoutOverlaySettings.visibility = View.VISIBLE
+                layoutTileDesc.visibility = View.GONE
+                layoutShortcutDesc.visibility = View.GONE
+                layoutDelaySettings.visibility = View.GONE
+            }
+            1 -> {
+                // クイック設定タイル
+                layoutOverlaySettings.visibility = View.GONE
+                layoutTileDesc.visibility = View.VISIBLE
+                layoutShortcutDesc.visibility = View.GONE
+                layoutDelaySettings.visibility = View.VISIBLE
+            }
+            2 -> {
+                // アプリアイコンタップ
+                layoutOverlaySettings.visibility = View.GONE
+                layoutTileDesc.visibility = View.GONE
+                layoutShortcutDesc.visibility = View.VISIBLE
+                layoutDelaySettings.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun checkAndStartOverlay() {
@@ -229,12 +340,15 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateStatus() {
+        var hasError = false
+
         // 1. GMS
         val isGmsActive = isAppInstalled("com.google.android.gms")
         if (isGmsActive) {
             tvGmsStatus.text = "✅ GMS: 有効"
             tvGmsStatus.setOnClickListener { openOppoGoogleSettings() }
         } else {
+            hasError = true
             tvGmsStatus.text = "❌ GMS: 無効 (タップでGoogle設定へ)"
             tvGmsStatus.setOnClickListener { openOppoGoogleSettings() }
         }
@@ -245,6 +359,7 @@ class SettingsActivity : AppCompatActivity() {
             tvGoogleStatus.text = "✅ Google アプリ: インストール済み"
             tvGoogleStatus.setOnClickListener { openGooglePlayStore("com.google.android.googlequicksearchbox") }
         } else {
+            hasError = true
             tvGoogleStatus.text = "❌ Google アプリ: 未インストール (タップでPlayストアへ)"
             tvGoogleStatus.setOnClickListener { openGooglePlayStore("com.google.android.googlequicksearchbox") }
         }
@@ -267,6 +382,7 @@ class SettingsActivity : AppCompatActivity() {
                 packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { startActivity(it) }
             }
         } else {
+            hasError = true
             tvShizukuStatus.text = "❌ Shizuku: 停止中または未接続 (タップでShizuku起動)"
             tvShizukuStatus.setOnClickListener {
                 if (isAppInstalled("moe.shizuku.privileged.api")) {
@@ -277,17 +393,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        // 5. GMSフラグ
-        tvFlagStatus.text = "✅ GMSフラグ: 設定済み (タップで再適用)"
-        tvFlagStatus.setOnClickListener {
-            try {
-                val method = GmsFlagSetter::class.java.methods.firstOrNull { it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType }
-                method?.invoke(null)
-                Toast.makeText(this, "GMSフラグを再適用しました", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(this, "再適用完了", Toast.LENGTH_SHORT).show()
-            }
-        }
+        // 5. GMSフラグ（③: テキストリンクなし）
+        tvFlagStatus.text = "✅ GMSフラグ: 設定済み"
 
         // 6. 重ねて表示
         val canDraw = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(this) else true
@@ -295,6 +402,7 @@ class SettingsActivity : AppCompatActivity() {
             tvOverlayPermissionStatus.text = "✅ 重ねて表示: 許可済み"
             tvOverlayPermissionStatus.setOnClickListener { openOverlayPermission() }
         } else {
+            hasError = true
             tvOverlayPermissionStatus.text = "❌ 重ねて表示: 未許可 (タップで権限設定へ)"
             tvOverlayPermissionStatus.setOnClickListener { openOverlayPermission() }
         }
@@ -306,6 +414,7 @@ class SettingsActivity : AppCompatActivity() {
             tvAccessibilityStatus.text = "✅ ユーザー補助: 有効"
             tvAccessibilityStatus.setOnClickListener { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         } else {
+            hasError = true
             tvAccessibilityStatus.text = "❌ ユーザー補助: 無効 (タップで設定を開く)"
             tvAccessibilityStatus.setOnClickListener { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         }
@@ -316,6 +425,7 @@ class SettingsActivity : AppCompatActivity() {
             tvAssistantStatus.text = "✅ アシスタント: Google"
             tvAssistantStatus.setOnClickListener(null)
         } else {
+            hasError = true
             val appName = getAppNameFromComponent(currentAssistant)
             tvAssistantStatus.text = "❌ アシスタント: ${appName ?: "未設定"} (タップでGoogleに変更)"
             tvAssistantStatus.setOnClickListener {
@@ -329,17 +439,16 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        // 9. バックグラウンド実行
-        tvBatteryStatus.text = "✅ バックグラウンド実行: 確認 (タップで電池設定へ)"
-        tvBatteryStatus.setOnClickListener {
-            try {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.parse("package:$packageName")
-                }
-                startActivity(intent)
-            } catch (e: Exception) {
-                startActivity(Intent(Settings.ACTION_SETTINGS))
-            }
+        // 9. バックグラウンド実行（④）
+        tvBatteryStatus.text = "✅ バックグラウンド実行: 許可"
+
+        // ② 正常時はアコーディオンを閉じ、エラー時は自動で開く
+        if (hasError) {
+            tvMainStatusHeader.text = "設定ステータス: ❌ 要設定項目あり"
+            toggleAccordion(true)
+        } else {
+            tvMainStatusHeader.text = "設定ステータス: ✅ 正常"
+            toggleAccordion(false)
         }
     }
 
