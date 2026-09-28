@@ -2,6 +2,7 @@ package com.oppocts.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,10 +14,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.oppocts.R
 import com.oppocts.service.OverlayTriggerService
 import com.oppocts.shizuku.AssistantSetter
-import com.oppocts.shizuku.GmsFlagSetter
-import com.oppocts.shizuku.ShizukuHelper
 import com.oppocts.trigger.CTSTrigger
-import com.oppocts.util.PackageUtils
+import rikka.shizuku.Shizuku
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -164,21 +163,35 @@ class SettingsActivity : AppCompatActivity() {
         checkAndStartOverlay()
     }
 
+    private fun isAppInstalled(pkg: String): Boolean {
+        return try {
+            packageManager.getPackageInfo(pkg, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
     private fun updateStatus() {
         // Googleアプリ状態
-        val isGoogleInstalled = PackageUtils.isPackageInstalled(this, "com.google.android.googlequicksearchbox")
+        val isGoogleInstalled = isAppInstalled("com.google.android.googlequicksearchbox")
         tvGoogleStatus.text = "Googleアプリ: " + if (isGoogleInstalled) "インストール済み" else "未インストール"
 
         // GMS状態
-        val isGmsActive = PackageUtils.isPackageInstalled(this, "com.google.android.gms")
+        val isGmsActive = isAppInstalled("com.google.android.gms")
         tvGmsStatus.text = "GMS: " + if (isGmsActive) "有効" else "無効/未検出"
 
         // Shizuku状態
-        val isShizukuRunning = ShizukuHelper.isShizukuRunning()
+        val isShizukuRunning = try {
+            Shizuku.pingBinder()
+        } catch (e: Throwable) {
+            false
+        }
         tvShizukuStatus.text = "Shizuku: " + if (isShizukuRunning) "実行中" else "停止中"
 
         // ユーザー補助状態
-        val isA11yActive = PackageUtils.isAccessibilityServiceEnabled(this, "com.oppocts.service.OppoAccessibilityService")
+        val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
+        val isA11yActive = enabledServices.contains("com.oppocts.service.OppoAccessibilityService")
         tvAccessibilityStatus.text = "ユーザー補助: " + if (isA11yActive) "有効" else "無効"
 
         // アシスタント状態
