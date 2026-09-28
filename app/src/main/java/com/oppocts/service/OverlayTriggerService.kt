@@ -130,7 +130,6 @@ class OverlayTriggerService : Service() {
 
         overlayView?.setBackgroundColor(if (isDebug) Color.parseColor("#66FF0000") else Color.TRANSPARENT)
 
-        // ジェスチャーバーエリアに完全に重なり込ませるフラグ構成
         val flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
