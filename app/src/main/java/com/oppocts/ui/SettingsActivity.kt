@@ -23,6 +23,7 @@ import rikka.shizuku.Shizuku
 
 class SettingsActivity : AppCompatActivity() {
 
+    // メインステータス
     private lateinit var layoutStatusHeader: LinearLayout
     private lateinit var tvMainStatusHeader: TextView
     private lateinit var tvAccordionIndicator: TextView
@@ -34,39 +35,43 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var btnSpeechStore: Button
     private lateinit var tvGeminiStatus: TextView
     private lateinit var btnGeminiStore: Button
-    private lateinit var tvShizukuStatus: TextView
-    private lateinit var btnShizukuLaunch: Button
-    private lateinit var tvFlagStatus: TextView
-    private lateinit var btnReapplyFlag: Button
+    private lateinit var tvAssistantStatus: TextView
+    private lateinit var btnAssistantSettings: Button
     private lateinit var tvOverlayPermissionStatus: TextView
     private lateinit var btnOverlaySettings: Button
     private lateinit var tvAccessibilityStatus: TextView
     private lateinit var btnAccessibilitySettings: Button
-    private lateinit var tvAssistantStatus: TextView
-    private lateinit var btnAssistantSettings: Button
     private lateinit var tvBatteryStatus: TextView
     private lateinit var btnBatterySettings: Button
 
+    // 高度な設定（新設アコーディオン）
+    private lateinit var layoutAdvancedHeader: LinearLayout
+    private lateinit var tvAdvancedAccordionIndicator: TextView
+    private lateinit var layoutAdvancedDetails: LinearLayout
+    private lateinit var tvShizukuStatus: TextView
+    private lateinit var btnShizukuLaunch: Button
+    private lateinit var tvFlagStatus: TextView
+    private lateinit var btnReapplyFlag: Button
+
+    // トリガー調整・スライダー
     private lateinit var tvHeightLabel: TextView
     private lateinit var tvOffsetLabel: TextView
     private lateinit var tvDelayLabel: TextView
-
     private lateinit var layoutOverlaySettings: LinearLayout
     private lateinit var layoutTileDesc: LinearLayout
     private lateinit var layoutShortcutDesc: LinearLayout
     private lateinit var layoutDelaySettings: LinearLayout
     private lateinit var seekbarTriggerDelay: SeekBar
-
     private lateinit var btnTestCts: Button
     private lateinit var btnRerunSetup: Button
     private lateinit var btnRefresh: Button
-
     private lateinit var spinnerTriggerMethod: Spinner
     private lateinit var switchOverlayDebug: SwitchMaterial
     private lateinit var seekbarOverlayOffset: SeekBar
     private lateinit var seekbarOverlayHeight: SeekBar
 
     private var userAccordionState: Boolean? = null
+    private var isAdvancedExpanded = false // 高度な設定の開閉状態（デフォルトは閉）
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +91,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        // メインステータス
         layoutStatusHeader = findViewById(R.id.layout_status_header)
         tvMainStatusHeader = findViewById(R.id.tv_main_status_header)
         tvAccordionIndicator = findViewById(R.id.tv_accordion_indicator)
@@ -97,18 +103,23 @@ class SettingsActivity : AppCompatActivity() {
         btnSpeechStore = findViewById(R.id.btn_speech_store)
         tvGeminiStatus = findViewById(R.id.tv_gemini_status)
         btnGeminiStore = findViewById(R.id.btn_gemini_store)
-        tvShizukuStatus = findViewById(R.id.tv_shizuku_status)
-        btnShizukuLaunch = findViewById(R.id.btn_shizuku_launch)
-        tvFlagStatus = findViewById(R.id.tv_flag_status)
-        btnReapplyFlag = findViewById(R.id.btn_reapply_flag)
+        tvAssistantStatus = findViewById(R.id.tv_assistant_status)
+        btnAssistantSettings = findViewById(R.id.btn_assistant_settings)
         tvOverlayPermissionStatus = findViewById(R.id.tv_overlay_permission_status)
         btnOverlaySettings = findViewById(R.id.btn_overlay_settings)
         tvAccessibilityStatus = findViewById(R.id.tv_accessibility_status)
         btnAccessibilitySettings = findViewById(R.id.btn_accessibility_settings)
-        tvAssistantStatus = findViewById(R.id.tv_assistant_status)
-        btnAssistantSettings = findViewById(R.id.btn_assistant_settings)
         tvBatteryStatus = findViewById(R.id.tv_battery_status)
         btnBatterySettings = findViewById(R.id.btn_battery_settings)
+
+        // 高度な設定
+        layoutAdvancedHeader = findViewById(R.id.layout_advanced_header)
+        tvAdvancedAccordionIndicator = findViewById(R.id.tv_advanced_accordion_indicator)
+        layoutAdvancedDetails = findViewById(R.id.layout_advanced_details)
+        tvShizukuStatus = findViewById(R.id.tv_shizuku_status)
+        btnShizukuLaunch = findViewById(R.id.btn_shizuku_launch)
+        tvFlagStatus = findViewById(R.id.tv_flag_status)
+        btnReapplyFlag = findViewById(R.id.btn_reapply_flag)
 
         tvHeightLabel = findViewById(R.id.tv_height_label)
         tvOffsetLabel = findViewById(R.id.tv_offset_label)
@@ -156,10 +167,18 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupListeners() {
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
 
+        // メインステータス開閉
         layoutStatusHeader.setOnClickListener {
             val nextState = (layoutStatusDetails.visibility != View.VISIBLE)
             userAccordionState = nextState
-            toggleAccordion(nextState)
+            toggleStatusAccordion(nextState)
+        }
+
+        // 高度な設定開閉（手動操作時のみ開閉）
+        layoutAdvancedHeader.setOnClickListener {
+            isAdvancedExpanded = !isAdvancedExpanded
+            layoutAdvancedDetails.visibility = if (isAdvancedExpanded) View.VISIBLE else View.GONE
+            tvAdvancedAccordionIndicator.text = if (isAdvancedExpanded) "▲" else "▼"
         }
 
         btnRefresh.setOnClickListener { updateStatus() }
@@ -320,7 +339,7 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun toggleAccordion(expand: Boolean) {
+    private fun toggleStatusAccordion(expand: Boolean) {
         layoutStatusDetails.visibility = if (expand) View.VISIBLE else View.GONE
         tvAccordionIndicator.text = if (expand) "▲" else "▼"
     }
@@ -422,22 +441,7 @@ class SettingsActivity : AppCompatActivity() {
         tvGeminiStatus.text = if (isGeminiInstalled) "✅ Gemini" else "⚪ Gemini"
         btnGeminiStore.visibility = View.VISIBLE
 
-        // 4. Shizuku
-        val isShizukuRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
-        tvShizukuStatus.text = if (isShizukuRunning) "✅ Shizuku: 実行中" else { hasError = true; "❌ Shizuku: 停止中" }
-        btnShizukuLaunch.visibility = View.VISIBLE
-
-        // 5. GMSフラグの実状態検知（チェックが外れていれば❌にしてエラー判定）
-        val isFlagEnabled = prefs.getBoolean("flag_cts_enabled", true)
-        if (isFlagEnabled) {
-            tvFlagStatus.text = "✅ GMSフラグ"
-        } else {
-            hasError = true
-            tvFlagStatus.text = "❌ GMSフラグ: 無効"
-        }
-        btnReapplyFlag.visibility = View.VISIBLE
-
-        // 6. デフォルトアシスタント
+        // 4. デフォルトアシスタント
         val currentAssistant = Settings.Secure.getString(contentResolver, "voice_interaction_service")
         if (currentAssistant != null && currentAssistant.contains("com.google.android.googlequicksearchbox")) {
             tvAssistantStatus.text = "✅ アシスタント: Google"
@@ -448,32 +452,43 @@ class SettingsActivity : AppCompatActivity() {
         }
         btnAssistantSettings.visibility = View.VISIBLE
 
-        // 7. 重ねて表示
+        // 5. 重ねて表示
         val canDraw = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(this) else true
         tvOverlayPermissionStatus.text = if (canDraw) "✅ 重ねて表示" else { hasError = true; "❌ 重ねて表示" }
         btnOverlaySettings.visibility = View.VISIBLE
 
-        // 8. ユーザー補助
+        // 6. ユーザー補助
         val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
         val isA11yActive = enabledServices.contains("com.oppocts.service.OppoAccessibilityService")
         tvAccessibilityStatus.text = if (isA11yActive) "✅ ユーザー補助" else { hasError = true; "❌ ユーザー補助" }
         btnAccessibilitySettings.visibility = View.VISIBLE
 
-        // 9. バックグラウンド
+        // 7. バックグラウンド
         tvBatteryStatus.text = "✅ バックグラウンド: 許可"
         btnBatterySettings.visibility = View.VISIBLE
 
+        // --- 高度な設定の内部ステータス更新（エラー判定には含めず、自動展開もしない） ---
+        val isShizukuRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
+        tvShizukuStatus.text = if (isShizukuRunning) "✅ Shizuku: 実行中" else "❌ Shizuku: 停止中"
+        btnShizukuLaunch.visibility = View.VISIBLE
+
+        val isFlagEnabled = prefs.getBoolean("flag_cts_enabled", true)
+        tvFlagStatus.text = if (isFlagEnabled) "✅ GMSフラグ" else "❌ GMSフラグ: 無効"
+        btnReapplyFlag.visibility = View.VISIBLE
+        // ---------------------------------------------------------------------------------
+
+        // メインステータスヘッダー
         if (hasError) {
             tvMainStatusHeader.text = "設定ステータス: ❌"
             if (userAccordionState != false) {
-                toggleAccordion(true)
+                toggleStatusAccordion(true)
             }
         } else {
             tvMainStatusHeader.text = "設定ステータス: ✅"
             if (userAccordionState == true) {
-                toggleAccordion(true)
+                toggleStatusAccordion(true)
             } else {
-                toggleAccordion(false)
+                toggleStatusAccordion(false)
             }
         }
     }
