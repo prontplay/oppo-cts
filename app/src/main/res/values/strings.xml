@@ -1,76 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OPPO CTS</string>
-    <string name="tile_label">Circle to Search</string>
-
-    <!-- ユーザー補助サービス -->
-    <string name="accessibility_service_description">ナビゲーションバーの長押しを検知してCircle to Searchを起動します。</string>
-
-    <!-- CTSトリガー -->
-    <string name="cts_trigger_failed">CTSの起動に失敗しました。Googleアプリがデフォルトのアシスタントとして設定されていることを確認してください。</string>
-    <string name="cts_trigger_success">Circle to Search が起動しました</string>
-
-    <!-- SetupWizard -->
-    <string name="setup_title">OPPO CTS 設定</string>
-    <string name="setup_step_gms">ステップ 1: GMSを有効化</string>
-    <string name="setup_step_gms_desc">中国国内向けROM（ColorOSなど）の端末では、Googleサービスがデフォルトで無効になっていることがよくあります。\n\n[設定] → [アプリ] → [アプリ管理] に移動し、右上の3点メニューから「システムアプリを表示」を選択し、「Google Play 開発者サービス」と「Google サービス フレームワーク」が有効になっていることを確認してください。</string>
-    <string name="setup_step_google_app">ステップ 2: Googleアプリをインストール</string>
-    <string name="setup_step_google_app_desc">かこって検索(Circle to Search)の機能はGoogleアプリに組み込まれています。\n\nPlayストアで「Google」アプリを検索し、最新バージョンにインストールまたは更新してください。すでにインストールされている場合は、一度起動して初期設定を完了させておくことをお勧めします。</string>
-    <string name="setup_step_shizuku">ステップ 3: Shizukuのインストールと起動</string>
-    <string name="setup_step_shizuku_desc">このアプリはシステム設定をバイパスするために、一時的なシステムレベルの権限（ADB権限）を必要とします。\n\nPlayストアまたはGitHubから「Shizuku」アプリをインストールし、「ワイヤレスデバッグ」機能を使ってShizukuを「実行中(Running)」にしてください。完了後、下の[確認]をタップして権限を許可してください。</string>
-    <string name="setup_step_assistant">ステップ 4: デフォルトアシスタントの変更</string>
-    <string name="setup_step_assistant_desc">かこって検索を使用するには、端末のデフォルトのデジタルアシスタントをGoogleに設定する必要があります。\n\n下の[適用]をタップすると、このアプリはShizukuの権限を使用して、システムのアシスタントをBreeno（またはその他）からGoogleに強制的に変更します。</string>
-    <string name="setup_step_gms_flag">ステップ 5: GMSフラグの設定</string>
-    <string name="setup_step_gms_flag_desc">中国向け端末のGoogleアプリでは、かこって検索機能がデフォルトでロックされています。\n\n下の[適用]をタップして、Shizukuの権限でGoogleアプリの内部フラグを変更します。これにより機能が強制的にロック解除されます。</string>
-    <string name="setup_step_gemini">ステップ 6: Geminiのインストール</string>
-    <string name="setup_step_gemini_desc">Googleの最新AIであるGeminiをデフォルトアシスタントとして使いたい場合は、Playストアから「Google Gemini」アプリをインストールしてください。\n\nこれをスキップしても、かこって検索は通常のGoogleアプリを通じて正常に動作します。</string>
-    <string name="setup_step_trigger">ステップ 7: トリガー方法の選択</string>
-    <string name="setup_step_trigger_desc">かこって検索の起動方法を選択してください。\n\n[ナビバーを長押し (推奨)]\n画面下部に透明なレイヤーを配置し、純正デバイスと同じようにホームバーを長押しして起動できます。\n\n[クイック設定タイル]\n通知パネルのクイック設定にボタンを追加して起動します。\n\n設定後もアプリ内でいつでも変更可能です。</string>
-    <string name="setup_complete">設定完了！</string>
-    <string name="setup_complete_desc">Circle to Searchを使用できるようになりました。</string>
-
-    <!-- ボタン -->
-    <string name="btn_next">次へ</string>
-    <string name="btn_back">戻る</string>
-    <string name="btn_done">完了</string>
-    <string name="btn_skip">スキップ</string>
-    <string name="btn_check">確認</string>
-    <string name="btn_install">インストール</string>
-    <string name="btn_apply">適用</string>
-
-    <!-- 設定画面 -->
-    <string name="settings_title">設定</string>
-    <string name="settings_trigger_method">トリガー方法</string>
-    <string name="settings_trigger_gesture">ナビバーを長押し</string>
-    <string name="settings_trigger_tile">クイック設定タイル</string>
-    <string name="settings_trigger_app">アプリアイコンをタップ</string>
-    <string name="settings_status">ステータス</string>
-    <string name="settings_status_google">Google アプリ</string>
-    <string name="settings_status_gms">GMS</string>
-    <string name="settings_status_shizuku">Shizuku</string>
-    <string name="settings_status_accessibility">ユーザー補助サービス</string>
-    <string name="settings_status_active">有効</string>
-    <string name="settings_status_inactive">無効</string>
-    <string name="settings_status_not_installed">未インストール</string>
-    <string name="settings_rerun_setup">設定を再実行</string>
-
-    <!-- ステータスメッセージ -->
-    <string name="shizuku_not_installed">Shizukuがインストールされていません。</string>
-    <string name="shizuku_not_running">Shizukuが実行されていません。</string>
-    <string name="shizuku_permission_denied">Shizukuの権限が拒否されました。</string>
-    <string name="google_app_not_found">Googleアプリが見つかりません。</string>
-    <string name="assistant_set_success">デフォルトのアシスタントをGoogleに変更しました。</string>
-    <string name="assistant_set_failed">アシスタントの変更に失敗しました。</string>
-    <string name="gms_flag_set_success">GMSフラグが設定されました。</string>
-    <string name="gms_flag_set_failed">GMSフラグの設定に失敗しました。</string>
-
-    <!-- メニューテキスト -->
-<resources>
-    <string name="app_name">OPPO CTS</string>
     <string name="tile_label">かこって検索</string>
+
+    <!-- ショートカット用ラベル -->
     <string name="shortcut_settings_short">設定</string>
     <string name="shortcut_settings_long">設定を開く</string>
     <string name="shortcut_cts_short">かこって検索</string>
-    <string name="shortcut_cts_long">かこって検索</string>
-</resources>
+    <string name="shortcut_cts_long">かこって検索を起動</string>
+
+    <!-- 汎用ボタン・メッセージ -->
+    <string name="btn_next">次へ</string>
+    <string name="btn_back">戻る</string>
+    <string name="btn_done">完了</string>
+    <string name="btn_check">確認</string>
+    <string name="btn_install">インストール</string>
+    <string name="btn_apply">適用</string>
+    <string name="setup_complete">初期設定が完了しました</string>
+
+    <!-- セットアップ・ステータス用 -->
+    <string name="shizuku_not_running">Shizukuが実行されていません</string>
+    <string name="assistant_set_success">デフォルトアシスタントをGoogleに変更しました</string>
+    <string name="assistant_set_failed">アシスタントの変更に失敗しました</string>
+    <string name="gms_flag_set_success">GMSフラグを設定しました</string>
+    <string name="gms_flag_set_failed">GMSフラグの設定に失敗しました</string>
+
+    <!-- セットアップステップ -->
+    <string name="setup_step_gms">ステップ 1: GMSを有効化</string>
+    <string name="setup_step_gms_desc">ColorOSでGoogleサービスがオンになっているか確認します。</string>
+    <string name="setup_step_google_app">ステップ 2: Googleアプリのインストール</string>
+    <string name="setup_step_google_app_desc">Googleアプリをインストールまたは更新してください。</string>
+    <string name="setup_step_shizuku">ステップ 3: Shizukuのインストールと起動</string>
+    <string name="setup_step_shizuku_desc">Shizukuを起動して権限を許可してください。</string>
+    <string name="setup_step_assistant">ステップ 4: デフォルトアシスタントの変更</string>
+    <string name="setup_step_assistant_desc">アシスタントアプリをGoogleに変更します。</string>
+    <string name="setup_step_gms_flag">ステップ 5: GMSフラグの設定</string>
+    <string name="setup_step_gms_flag_desc">Circle to Search機能を有効化します。</string>
+    <string name="setup_step_gemini">ステップ 6: Geminiのインストール</string>
+    <string name="setup_step_gemini_desc">必要に応じてGeminiをインストールしてください。</string>
+    <string name="setup_step_trigger">ステップ 7: トリガー設定</string>
+    <string name="setup_step_trigger_desc">起動方法を設定してください。</string>
 </resources>
