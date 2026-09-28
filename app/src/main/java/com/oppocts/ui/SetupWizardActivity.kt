@@ -15,14 +15,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import com.oppocts.R
-import com.oppocts.shizuku.GmsFlagSetter
 import com.oppocts.trigger.CTSTrigger
-import rikka.shizuku.Shizuku
 
 class SetupWizardActivity : AppCompatActivity() {
 
     private var currentStep = 1
-    private val totalSteps = 10 // GMS削除＋アシスタント繰り上げで全10ステップ
+    private val totalSteps = 8 // Shizuku・フラグ撤去により全8ステップに短縮
 
     private lateinit var tvStepTitle: TextView
     private lateinit var tvStepDesc: TextView
@@ -100,15 +98,6 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
-    private fun isAppInstalled(pkg: String): Boolean {
-        return try {
-            packageManager.getPackageInfo(pkg, 0)
-            true
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
-        }
-    }
-
     private fun updateUI() {
         btnBack.visibility = if (currentStep == 1) View.GONE else View.VISIBLE
         btnNext.text = if (currentStep == totalSteps) "完了" else "次へ"
@@ -144,56 +133,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     openGooglePlayStore("com.google.android.apps.bard")
                 }
             }
-            // 4. Shizuku
+            // 4. デフォルトアシスタントの変更
             4 -> {
-                tvStepTitle.text = "ステップ 4: Shizukuのインストールと起動"
-                tvStepDesc.text = "ColorOSのシステム制限を回避するためにShizuku（ADB権限）が必要です。\n\nShizukuを起動してワイヤレスデバッグで実行中にしてから [確認] を押してください。"
-                btnAction.text = "確認 / 権限リクエスト"
-                btnAction.visibility = View.VISIBLE
-                btnAction.setOnClickListener {
-                    if (!isAppInstalled("moe.shizuku.privileged.api")) {
-                        openGooglePlayStore("moe.shizuku.privileged.api")
-                    } else {
-                        val isRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
-                        if (!isRunning) {
-                            Toast.makeText(this, "Shizukuが実行されていません", Toast.LENGTH_SHORT).show()
-                        } else {
-                            try {
-                                if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
-                                    Shizuku.requestPermission(1001)
-                                } else {
-                                    Toast.makeText(this, "Shizuku権限は既に許可されています", Toast.LENGTH_SHORT).show()
-                                }
-                            } catch (e: Throwable) {
-                                Toast.makeText(this, "Shizuku権限の取得に失敗しました", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-            }
-            // 5. GMSフラグ
-            5 -> {
-                tvStepTitle.text = "ステップ 5: GMSフラグの設定"
-                tvStepDesc.text = "中国版端末のGoogleアプリ内で制限されているCircle to Search機能を、Shizuku経由で強制有効化します。"
-                btnAction.text = "適用"
-                btnAction.visibility = View.VISIBLE
-                btnAction.setOnClickListener {
-                    try {
-                        val method = GmsFlagSetter::class.java.methods.firstOrNull { it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType }
-                        val success = (method?.invoke(null) as? Boolean) ?: true
-                        if (success) {
-                            Toast.makeText(this, "GMSフラグを設定しました", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "フラグ設定に失敗しました", Toast.LENGTH_SHORT).show()
-                        }
-                    } catch (e: Throwable) {
-                        Toast.makeText(this, "GMSフラグを設定しました", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            // 6. デフォルトアシスタントの変更（旧ステップ9から繰り上げ）
-            6 -> {
-                tvStepTitle.text = "ステップ 6: デフォルトアシスタントの変更"
+                tvStepTitle.text = "ステップ 4: デフォルトアシスタントの変更"
                 tvStepDesc.text = "かこって検索を利用するには、端末のデジタルアシスタントを「Google」に指定する必要があります。\n\n下のボタンを押してアシスタント設定を開き、デフォルトのアシスタントアプリを「Google」に設定してください。"
                 btnAction.text = "アシスタント設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -209,9 +151,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            // 7. 重ねて表示
-            7 -> {
-                tvStepTitle.text = "ステップ 7: 重ねて表示（オーバーレイ）の許可"
+            // 5. 重ねて表示
+            5 -> {
+                tvStepTitle.text = "ステップ 5: 重ねて表示（オーバーレイ）の許可"
                 tvStepDesc.text = "画面最下部のナビゲーションバー上に透明な長押し判定エリアを常駐させるため、「他のアプリの上に重ねて表示」の権限を許可してください。"
                 btnAction.text = "重ねて表示の設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -225,9 +167,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            // 8. ユーザー補助
-            8 -> {
-                tvStepTitle.text = "ステップ 8: ユーザー補助の有効化"
+            // 6. ユーザー補助
+            6 -> {
+                tvStepTitle.text = "ステップ 6: ユーザー補助の有効化"
                 tvStepDesc.text = "ジェスチャーやキー入力を安定して検知させるため、ユーザー補助設定から「OPPO CTS」をONにしてください。"
                 btnAction.text = "ユーザー補助設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -235,9 +177,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
             }
-            // 9. バックグラウンド
-            9 -> {
-                tvStepTitle.text = "ステップ 9: バックグラウンド実行の許可"
+            // 7. バックグラウンド
+            7 -> {
+                tvStepTitle.text = "ステップ 7: バックグラウンド実行の許可"
                 tvStepDesc.text = "ColorOSによるタスクキルを防ぎ、常にジェスチャー長押しを有効にするため、電池の最適化を無効化（バックグラウンドでのアクティビティを許可）してください。"
                 btnAction.text = "電池設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -252,8 +194,8 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            // 10. 初回起動時の注意
-            10 -> {
+            // 8. 初回起動時の注意
+            8 -> {
                 tvStepTitle.text = "すべての準備が整いました！"
                 tvStepDesc.text = "\n⚠️【初回起動時の注意】\n初めてアプリを起動した際、システムから\n「ユーザー補助へのアクセスを付与されています」\nという確認画面が表示される場合があります。\n\nその際は必ず【オンのままにする】を選択してください。（オフにするとジェスチャー検知が停止します）"
                 btnAction.visibility = View.GONE
