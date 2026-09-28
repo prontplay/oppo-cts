@@ -1,8 +1,10 @@
 package com.oppocts.ui
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +12,7 @@ import android.provider.Settings
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
 import com.oppocts.R
 import com.oppocts.shizuku.AssistantSetter
 import com.oppocts.shizuku.GmsFlagSetter
@@ -18,7 +21,7 @@ import rikka.shizuku.Shizuku
 class SetupWizardActivity : AppCompatActivity() {
 
     private var currentStep = 1
-    private val totalSteps = 9 // 権限設定を追加して全9ステップに拡張
+    private val totalSteps = 9
 
     private lateinit var tvStepTitle: TextView
     private lateinit var tvStepDesc: TextView
@@ -31,6 +34,10 @@ class SetupWizardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ステータスバーの文字色を背景に合わせて反転
+        val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = !isNightMode
 
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
         if (prefs.getBoolean("setup_completed", false)) {
@@ -102,6 +109,25 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
+    // ColorOSのGoogleモバイルサービス（GMS）有効化画面を直接開く
+    private fun openOppoGoogleSettings() {
+        val intents = arrayOf(
+            Intent().setComponent(ComponentName("com.coloros.google", "com.coloros.google.GoogleSettingsActivity")),
+            Intent().setComponent(ComponentName("com.oplus.google", "com.oplus.google.GoogleSettingsActivity")),
+            Intent("com.coloros.settings.GOOGLE_SETTINGS"),
+            Intent("com.android.settings.Settings\$GoogleSettingsActivity"),
+            Intent(Settings.ACTION_SETTINGS)
+        )
+        for (intent in intents) {
+            try {
+                startActivity(intent)
+                return
+            } catch (e: Exception) {
+                // 次の候補を試行
+            }
+        }
+    }
+
     private fun updateUI() {
         btnBack.visibility = if (currentStep == 1) View.GONE else View.VISIBLE
         btnNext.text = if (currentStep == totalSteps) "完了" else "次へ"
@@ -109,22 +135,11 @@ class SetupWizardActivity : AppCompatActivity() {
 
         when (currentStep) {
             1 -> {
-                tvStepTitle.text = "ステップ 1: GMS（Google設定）の有効化"
-                tvStepDesc.text = "ColorOSでGoogleサービスが有効になっていることを確認します。\n\n下のボタンを押してGoogle設定を開いてください（開かない場合は [設定] → [システムおよび更新] → [Google設定] を直接確認してください）。"
+                tvStepTitle.text = "ステップ 1: GMS（Googleモバイルサービス）の有効化"
+                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンをタップしてOppoのGoogle設定を開き、トグルスイッチがONになっていることを確認してください。"
                 btnAction.text = "Google設定を開く"
                 btnAction.visibility = View.VISIBLE
-                btnAction.setOnClickListener {
-                    try {
-                        val intent = Intent("com.google.android.gms.settings.GOOGLE_SETTINGS")
-                        startActivity(intent)
-                    } catch (e: Exception) {
-                        try {
-                            startActivity(Intent(Settings.ACTION_SYNC_SETTINGS))
-                        } catch (ex: Exception) {
-                            startActivity(Intent(Settings.ACTION_SETTINGS))
-                        }
-                    }
-                }
+                btnAction.setOnClickListener { openOppoGoogleSettings() }
             }
             2 -> {
                 tvStepTitle.text = "ステップ 2: Googleアプリのインストール"
@@ -169,8 +184,7 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.setOnClickListener {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         try {
-                            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-                            startActivity(intent)
+                            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
                         } catch (e: Exception) {
                             startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
                         }
@@ -198,9 +212,7 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
                     try {
-                        val method = GmsFlagSetter::class.java.methods.firstOrNull { 
-                            it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType 
-                        }
+                        val method = GmsFlagSetter::class.java.methods.firstOrNull { it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType }
                         val success = (method?.invoke(null) as? Boolean) ?: true
                         if (success) {
                             Toast.makeText(this, "GMSフラグを設定しました", Toast.LENGTH_SHORT).show()
