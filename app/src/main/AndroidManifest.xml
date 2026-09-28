@@ -41,10 +41,6 @@
             android:theme="@style/Theme.OppoCTS.Transparent"
             android:excludeFromRecents="true"
             android:taskAffinity="">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <!-- 트리거 전용 Activity — 외부 매퍼 연결용 -->
@@ -60,14 +56,19 @@
         <!-- 셋업 위저드 Activity -->
         <activity
             android:name=".ui.SetupWizardActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.OppoCTS" />
 
-        <!-- 설정 Activity -->
+        <!-- 설정 Activity (ホーム画面から起動できるように変更) -->
         <activity
             android:name=".ui.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.OppoCTS" />
+            android:exported="true"
+            android:theme="@style/Theme.OppoCTS">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- Quick Settings 타일 서비스 -->
         <service
