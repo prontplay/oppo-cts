@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.oppocts.R
 import com.oppocts.service.OverlayTriggerService
-import com.oppocts.shizuku.AssistantSetter
 import com.oppocts.trigger.CTSTrigger
 import rikka.shizuku.Shizuku
 
@@ -82,6 +81,7 @@ class SettingsActivity : AppCompatActivity() {
         spinnerTriggerMethod.setSelection(prefs.getInt("trigger_method", 0))
         seekbarOverlayHeight.progress = prefs.getInt("trigger_height_px", 70)
         seekbarOverlayOffset.progress = prefs.getInt("trigger_y_offset_px", 0)
+        switchOverlayDebug.isChecked = prefs.getBoolean("overlay_debug", false)
     }
 
     private fun setupListeners() {
@@ -120,22 +120,30 @@ class SettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        // デバッグ赤枠表示切り替え
+        switchOverlayDebug.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("overlay_debug", isChecked).apply()
+            sendOverlayUpdate()
+        }
+
+        // 高さスライダー
         seekbarOverlayHeight.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     prefs.edit().putInt("trigger_height_px", Math.max(progress, 30)).apply()
-                    restartOverlayService()
+                    sendOverlayUpdate()
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
+        // Y軸オフセットスライダー（クラッシュ防止のため安全に更新インテントを送信）
         seekbarOverlayOffset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     prefs.edit().putInt("trigger_y_offset_px", progress).apply()
-                    restartOverlayService()
+                    sendOverlayUpdate()
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -158,9 +166,12 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun restartOverlayService() {
-        stopService(Intent(this, OverlayTriggerService::class.java))
-        checkAndStartOverlay()
+    // サービスを破棄せずパラメータのみ安全にリアルタイム反映する
+    private fun sendOverlayUpdate() {
+        val intent = Intent(this, OverlayTriggerService::class.java).apply {
+            action = "ACTION_UPDATE_OVERLAY_LAYOUT"
+        }
+        startService(intent)
     }
 
     private fun isAppInstalled(pkg: String): Boolean {
@@ -173,31 +184,18 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateStatus() {
-        // Googleアプリ状態
-        val isGoogleInstalled = isAppInstalled("com.google.android.googlequicksearchbox")
-        tvGoogleStatus.text = "Googleアプリ: " + if (isGoogleInstalled) "インストール済み" else "未インストール"
+        tvGoogleStatus.text = "Google アプリ: " + if (isAppInstalled("com.google.android.googlequicksearchbox")) "インストール済み" else "未インストール"
+        tvGmsStatus.text = "GMS: " + if (isAppInstalled("com.google.android.gms")) "有効" else "無効"
 
-        // GMS状態
-        val isGmsActive = isAppInstalled("com.google.android.gms")
-        tvGmsStatus.text = "GMS: " + if (isGmsActive) "有効" else "無効/未検出"
-
-        // Shizuku状態
-        val isShizukuRunning = try {
-            Shizuku.pingBinder()
-        } catch (e: Throwable) {
-            false
-        }
+        val isShizukuRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
         tvShizukuStatus.text = "Shizuku: " + if (isShizukuRunning) "実行中" else "停止中"
 
-        // ユーザー補助状態
         val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
         val isA11yActive = enabledServices.contains("com.oppocts.service.OppoAccessibilityService")
         tvAccessibilityStatus.text = "ユーザー補助: " + if (isA11yActive) "有効" else "無効"
 
-        // アシスタント状態
         val currentAssistant = Settings.Secure.getString(contentResolver, "voice_interaction_service")
         tvAssistantStatus.text = "デフォルトアシスタント: " + (currentAssistant ?: "未設定")
-
         tvFlagStatus.text = "GMSフラグ: 設定済み"
     }
 }
