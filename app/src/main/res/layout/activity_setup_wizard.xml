@@ -1,131 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@color/background_light">
+    android:background="?android:attr/colorBackground">
 
-    <!-- 상단: 진행률 -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- タイトル -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
+        android:text="OPPO CTS 設定"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
 
-        <TextView
-            android:id="@+id/tv_step_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1 / 8"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary_light" />
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:max="8"
-        android:progress="1"
-        android:progressTint="@color/primary"
-        android:progressBackgroundTint="@color/text_secondary_light"
-        android:layout_marginBottom="32dp" />
-
-    <!-- 중앙: 단계 내용 -->
-    <ScrollView
+    <!-- ステップカード -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tv_step_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="단계 제목"
-                android:textSize="24sp"
+                android:text="ステップ 1: GMSを有効化"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary_light"
                 android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:id="@+id/tv_step_description"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="단계 설명"
-                android:textSize="16sp"
-                android:textColor="@color/text_secondary_light"
-                android:lineSpacingMultiplier="1.4"
-                android:layout_marginBottom="24dp" />
-
-            <!-- 액션 버튼 -->
-            <Button
-                android:id="@+id/btn_action"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="확인"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp" />
-
-            <!-- 상태 표시 -->
-            <LinearLayout
-                android:id="@+id/status_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/status_background"
-                android:padding="16dp"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/tv_status"
+                    android:id="@+id/tv_step_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textIsSelectable="true"
-                    android:textColor="@color/text_primary_light" />
-            </LinearLayout>
+                    android:text="説明文を読み込み中..."
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp" />
+            </ScrollView>
+
+            <Button
+                android:id="@+id/btn_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="確認"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
-    </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <!-- 하단: 네비게이션 버튼 -->
+    <!-- 下部ナビゲーションボタン（戻る・次へ） -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_back"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="@string/btn_back"
-            android:visibility="invisible" />
-
-        <View
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="戻る"
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/btn_next"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="@string/btn_next" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="次へ"
+            android:layout_marginStart="8dp" />
+
     </LinearLayout>
 
 </LinearLayout>
