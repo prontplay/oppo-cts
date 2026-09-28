@@ -9,23 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="OPPO CTS 設定"
-            android:textSize="24sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="20dp" />
 
-        <!-- システム状態カード -->
+        <!-- ステータス一覧カード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,62 +33,67 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="システム状態"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ステータス"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_refresh"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="更新" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tv_google_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Googleアプリ: 確認中..."
-                    android:layout_marginBottom="4dp" />
+                    android:text="Google アプリ: 確認中..."
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tv_gms_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="GMS: 確認中..."
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tv_shizuku_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Shizuku: 確認中..."
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tv_accessibility_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ユーザー補助サービス: 確認中..."
-                    android:layout_marginBottom="4dp" />
+                    android:text="ユーザー補助: 確認中..."
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tv_assistant_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="デフォルトアシスタント: 確認中..."
-                    android:layout_marginBottom="4dp" />
+                    android:text="アシスタント: 確認中..."
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tv_flag_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="GMSフラグ: 確認中..." />
-
-                <Button
-                    android:id="@+id/btn_refresh"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="状態を再読み込み"
-                    android:layout_marginTop="8dp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -98,8 +103,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,40 +123,39 @@
                 <Spinner
                     android:id="@+id/spinner_trigger_method"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ナビゲーションバー透明エリア設定"
+                    android:text="オーバーレイバー調整"
                     android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_overlay_debug"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="判定エリアを可視化（デバッグ表示）" />
+                    android:text="判定エリアを可視化（赤色表示）" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="バーの高さ (厚み)"
-                    android:layout_marginTop="8dp" />
+                    android:text="バーの厚み (高さ)"
+                    android:layout_marginTop="12dp" />
 
                 <SeekBar
                     android:id="@+id/seekbar_overlay_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="200" />
+                    android:max="150" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Y軸オフセット (上下位置)"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="12dp" />
 
                 <SeekBar
                     android:id="@+id/seekbar_overlay_offset"
@@ -162,13 +166,13 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- テスト & 操作カード -->
+        <!-- 管理・テストカード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -179,7 +183,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="テスト &amp; 管理"
+                    android:text="操作 &amp; テスト"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
@@ -203,23 +207,18 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="初期セットアップを再実行"
-                    android:layout_marginBottom="8dp" />
+                    android:text="初期セットアップを再実行" />
 
                 <Button
                     android:id="@+id/btn_key_test"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="キーイベントテスト"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btn_intent_test"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="インテントテスト"
                     android:visibility="gone" />
 
                 <TextView
