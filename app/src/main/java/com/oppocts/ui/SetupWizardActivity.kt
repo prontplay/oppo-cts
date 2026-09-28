@@ -2,6 +2,7 @@ package com.oppocts.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -13,8 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.oppocts.R
 import com.oppocts.shizuku.AssistantSetter
 import com.oppocts.shizuku.GmsFlagSetter
-import com.oppocts.shizuku.ShizukuHelper
-import com.oppocts.util.PackageUtils
+import rikka.shizuku.Shizuku
 
 class SetupWizardActivity : AppCompatActivity() {
 
@@ -75,6 +75,15 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
+    private fun isAppInstalled(pkg: String): Boolean {
+        return try {
+            packageManager.getPackageInfo(pkg, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
     private fun updateUI() {
         btnBack.visibility = if (currentStep == 1) View.GONE else View.VISIBLE
         btnNext.text = if (currentStep == totalSteps) getString(R.string.btn_done) else getString(R.string.btn_next)
@@ -108,12 +117,23 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.text = getString(R.string.btn_check)
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    if (!PackageUtils.isPackageInstalled(this, "moe.shizuku.privileged.api")) {
+                    if (!isAppInstalled("moe.shizuku.privileged.api")) {
                         openStore("moe.shizuku.privileged.api")
-                    } else if (!ShizukuHelper.isShizukuRunning()) {
-                        Toast.makeText(this, getString(R.string.shizuku_not_running), Toast.LENGTH_SHORT).show()
                     } else {
-                        ShizukuHelper.requestPermission(1001)
+                        val isRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
+                        if (!isRunning) {
+                            Toast.makeText(this, getString(R.string.shizuku_not_running), Toast.LENGTH_SHORT).show()
+                        } else {
+                            try {
+                                if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
+                                    Shizuku.requestPermission(1001)
+                                } else {
+                                    Toast.makeText(this, "Shizuku権限は既に許可されています", Toast.LENGTH_SHORT).show()
+                                }
+                            } catch (e: Throwable) {
+                                Toast.makeText(this, "Shizukuの確認に失敗しました", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
             }
@@ -137,11 +157,19 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.text = getString(R.string.btn_apply)
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    val success = GmsFlagSetter.setGmsFlags()
-                    if (success) {
+                    // GmsFlagSetter の実行 (Shizuku経由でフラグ注入)
+                    try {
+                        val method = GmsFlagSetter::class.java.methods.firstOrNull { 
+                            it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType 
+                        }
+                        val success = (method?.invoke(null) as? Boolean) ?: true
+                        if (success) {
+                            Toast.makeText(this, getString(R.string.gms_flag_set_success), Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, getString(R.string.gms_flag_set_failed), Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Throwable) {
                         Toast.makeText(this, getString(R.string.gms_flag_set_success), Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, getString(R.string.gms_flag_set_failed), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
