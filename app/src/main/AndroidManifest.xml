@@ -2,22 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 인터넷 권한 (Google 서비스 상태 확인용) -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Shizuku가 사용하는 권한 (선택적) -->
-    <uses-permission android:name="moe.shizuku.manager.permission.API_V23"
-        tools:ignore="ProtectedPermissions" />
-
-    <!-- 부팅 완료 후 자동 복원 -->
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- 오버레이 허용 (화면 하단 트리거용) -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
-    <!-- Android 11+ 패키지 가시성: 설치 여부 확인이 필요한 앱 -->
     <queries>
         <package android:name="com.google.android.googlequicksearchbox" />
         <package android:name="com.google.android.apps.bard" />
@@ -34,34 +25,25 @@
         android:theme="@style/Theme.OppoCTS"
         tools:targetApi="35">
 
-        <!-- 메인 Activity — 앱 아이콘 탭 시 CTS 즉시 실행 -->
+        <!-- CTS即時発火用（LAUNCHERを外し、ショートカットや外部連携用として保持） -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.OppoCTS.Transparent"
             android:excludeFromRecents="true"
-            android:taskAffinity="">
-        </activity>
+            android:taskAffinity="" />
 
-        <!-- 트리거 전용 Activity — 외부 매퍼 연결용 -->
         <activity
             android:name=".ui.TriggerActivity"
             android:exported="true"
             android:theme="@style/Theme.OppoCTS.Transparent"
             android:excludeFromRecents="true"
             android:label="Trigger CTS (No Shizuku)"
-            android:taskAffinity="">
-        </activity>
+            android:taskAffinity="" />
 
-        <!-- 셋업 위저드 Activity -->
+        <!-- アプリアイコンから SetupWizardActivity を直接開く -->
         <activity
             android:name=".ui.SetupWizardActivity"
-            android:exported="true"
-            android:theme="@style/Theme.OppoCTS" />
-
-        <!-- 설정 Activity (ホーム画面から起動できるように変更) -->
-        <activity
-            android:name=".ui.SettingsActivity"
             android:exported="true"
             android:theme="@style/Theme.OppoCTS">
             <intent-filter>
@@ -70,7 +52,12 @@
             </intent-filter>
         </activity>
 
-        <!-- Quick Settings 타일 서비스 -->
+        <!-- 設定画面も外部から開けるように開放 -->
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.OppoCTS" />
+
         <service
             android:name=".trigger.CTSTileService"
             android:icon="@drawable/ic_cts"
@@ -82,7 +69,6 @@
             </intent-filter>
         </service>
 
-        <!-- 접근성 서비스 — 네비바 제스처 감지 -->
         <service
             android:name=".service.OppoAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
@@ -95,7 +81,6 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <!-- 화면 하단 투명 오버레이 서비스 -->
         <service
             android:name=".service.OverlayTriggerService"
             android:exported="false"
@@ -104,7 +89,6 @@
                 android:value="Floating trigger for Circle to Search" />
         </service>
 
-        <!-- Shizuku ContentProvider (Shizuku API 바인딩용) -->
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"
@@ -114,7 +98,6 @@
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL"
             tools:ignore="ExportedContentProvider,ProtectedPermissions" />
 
-        <!-- 부팅 완료 리시버 — 자동 복원 -->
         <receiver
             android:name=".service.BootReceiver"
             android:exported="true"
@@ -126,5 +109,4 @@
         </receiver>
 
     </application>
-
 </manifest>
