@@ -4,8 +4,8 @@
         android:shortcutId="settings_shortcut"
         android:enabled="true"
         android:icon="@drawable/ic_cts"
-        android:shortcutShortLabel="設定"
-        android:shortcutLongLabel="OPPO CTS 設定を開く">
+        android:shortcutShortLabel="@string/shortcut_settings_short"
+        android:shortcutLongLabel="@string/shortcut_settings_long">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.oppocts"
