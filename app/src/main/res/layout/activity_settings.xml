@@ -24,7 +24,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="OPPO CTS 設定"
+                android:text="CTS Launcher 設定"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -440,7 +440,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 高度な設定カード（常時閉じたアコーディオン、エラー時も勝手に開かない） -->
+        <!-- 高度な設定カード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -484,7 +484,7 @@
                         android:paddingEnd="4dp" />
                 </LinearLayout>
 
-                <!-- アコーディオン詳細コンテナ（開閉対象・初期値は完全非表示） -->
+                <!-- アコーディオン詳細コンテナ -->
                 <LinearLayout
                     android:id="@+id/layout_advanced_details"
                     android:layout_width="match_parent"
