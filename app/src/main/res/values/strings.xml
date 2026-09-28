@@ -63,4 +63,8 @@
     <string name="assistant_set_failed">アシスタントの変更に失敗しました。</string>
     <string name="gms_flag_set_success">GMSフラグが設定されました。</string>
     <string name="gms_flag_set_failed">GMSフラグの設定に失敗しました。</string>
+
+    <!-- メニューテキスト -->
+    <string name="shortcut_settings_short">設定</string>
+    <string name="shortcut_settings_long">OPPO CTS 設定を開く</string>
 </resources>
