@@ -30,7 +30,6 @@ class SetupWizardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // すでにセットアップ完了済みの場合は、直接設定画面へ飛ばす
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
         if (prefs.getBoolean("setup_completed", false)) {
             startActivity(Intent(this, SettingsActivity::class.java))
@@ -51,7 +50,6 @@ class SetupWizardActivity : AppCompatActivity() {
                 currentStep++
                 updateUI()
             } else {
-                // セットアップ完了: フラグを保存して設定画面を立ち上げる
                 prefs.edit().putBoolean("setup_completed", true).apply()
                 Toast.makeText(this, getString(R.string.setup_complete), Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, SettingsActivity::class.java))
@@ -69,6 +67,14 @@ class SetupWizardActivity : AppCompatActivity() {
         updateUI()
     }
 
+    private fun openStore(pkg: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$pkg")))
+        } catch (e: Exception) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$pkg")))
+        }
+    }
+
     private fun updateUI() {
         btnBack.visibility = if (currentStep == 1) View.GONE else View.VISIBLE
         btnNext.text = if (currentStep == totalSteps) getString(R.string.btn_done) else getString(R.string.btn_next)
@@ -83,7 +89,7 @@ class SetupWizardActivity : AppCompatActivity() {
                     try {
                         startActivity(Intent(Settings.ACTION_APPLICATION_SETTINGS))
                     } catch (e: Exception) {
-                        Toast.makeText(this, "設定を開けませんでした", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "設定アプリを開けませんでした", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -93,7 +99,7 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.text = getString(R.string.btn_install)
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    PackageUtils.openPlayStore(this, "com.google.android.googlequicksearchbox")
+                    openStore("com.google.android.googlequicksearchbox")
                 }
             }
             3 -> {
@@ -102,8 +108,8 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.text = getString(R.string.btn_check)
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    if (!ShizukuHelper.isShizukuInstalled(this)) {
-                        PackageUtils.openPlayStore(this, "moe.shizuku.privileged.api")
+                    if (!PackageUtils.isPackageInstalled(this, "moe.shizuku.privileged.api")) {
+                        openStore("moe.shizuku.privileged.api")
                     } else if (!ShizukuHelper.isShizukuRunning()) {
                         Toast.makeText(this, getString(R.string.shizuku_not_running), Toast.LENGTH_SHORT).show()
                     } else {
@@ -131,7 +137,7 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.text = getString(R.string.btn_apply)
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    val success = GmsFlagSetter.enableCtsFlags()
+                    val success = GmsFlagSetter.setGmsFlags()
                     if (success) {
                         Toast.makeText(this, getString(R.string.gms_flag_set_success), Toast.LENGTH_SHORT).show()
                     } else {
@@ -145,7 +151,7 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.text = getString(R.string.btn_install)
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    PackageUtils.openPlayStore(this, "com.google.android.apps.bard")
+                    openStore("com.google.android.apps.bard")
                 }
             }
             7 -> {
