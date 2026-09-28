@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- かこって検索（遅延起動）: タイルと同じic_ctsアイコン -->
+    <!-- かこって検索（遅延起動） -->
     <shortcut
         android:shortcutId="cts_delay_shortcut"
         android:enabled="true"
-        android:icon="@drawable/ic_cts"
+        android:icon="@drawable/ic_shortcut_cts"
         android:shortcutShortLabel="@string/shortcut_cts_short"
         android:shortcutLongLabel="@string/shortcut_cts_long">
         <intent
@@ -14,11 +14,11 @@
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
-    <!-- 設定画面: 歯車アイコン（ic_settings） -->
+    <!-- 設定画面 -->
     <shortcut
         android:shortcutId="settings_shortcut"
         android:enabled="true"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/ic_shortcut_settings"
         android:shortcutShortLabel="@string/shortcut_settings_short"
         android:shortcutLongLabel="@string/shortcut_settings_long">
         <intent
