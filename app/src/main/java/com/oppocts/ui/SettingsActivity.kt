@@ -44,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var tvBatteryStatus: TextView
     private lateinit var btnBatterySettings: Button
 
-    // 高度な設定（新設アコーディオン）
+    // 高度な設定
     private lateinit var layoutAdvancedHeader: LinearLayout
     private lateinit var tvAdvancedAccordionIndicator: TextView
     private lateinit var layoutAdvancedDetails: LinearLayout
@@ -71,7 +71,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var seekbarOverlayHeight: SeekBar
 
     private var userAccordionState: Boolean? = null
-    private var isAdvancedExpanded = false // 高度な設定の開閉状態（デフォルトは閉）
+    private var isAdvancedExpanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,14 +167,12 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupListeners() {
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
 
-        // メインステータス開閉
         layoutStatusHeader.setOnClickListener {
             val nextState = (layoutStatusDetails.visibility != View.VISIBLE)
             userAccordionState = nextState
             toggleStatusAccordion(nextState)
         }
 
-        // 高度な設定開閉（手動操作時のみ開閉）
         layoutAdvancedHeader.setOnClickListener {
             isAdvancedExpanded = !isAdvancedExpanded
             layoutAdvancedDetails.visibility = if (isAdvancedExpanded) View.VISIBLE else View.GONE
@@ -202,11 +200,26 @@ class SettingsActivity : AppCompatActivity() {
         btnSpeechStore.setOnClickListener { openGooglePlayStore("com.google.android.tts") }
         btnGeminiStore.setOnClickListener { openGooglePlayStore("com.google.android.apps.bard") }
 
+        // ② Shizukuボタン: 権限リクエスト・状態確認
         btnShizukuLaunch.setOnClickListener {
-            if (isAppInstalled("moe.shizuku.privileged.api")) {
-                packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { startActivity(it) }
-            } else {
+            if (!isAppInstalled("moe.shizuku.privileged.api")) {
                 openGooglePlayStore("moe.shizuku.privileged.api")
+            } else {
+                val isRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
+                if (!isRunning) {
+                    Toast.makeText(this, "Shizukuが実行されていません。Shizukuアプリを起動してください", Toast.LENGTH_SHORT).show()
+                    packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { startActivity(it) }
+                } else {
+                    try {
+                        if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
+                            Shizuku.requestPermission(1001)
+                        } else {
+                            Toast.makeText(this, "Shizuku権限は既に許可されています", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Throwable) {
+                        Toast.makeText(this, "Shizuku権限の要求に失敗しました", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
@@ -467,15 +480,25 @@ class SettingsActivity : AppCompatActivity() {
         tvBatteryStatus.text = "✅ バックグラウンド: 許可"
         btnBatterySettings.visibility = View.VISIBLE
 
-        // --- 高度な設定の内部ステータス更新（エラー判定には含めず、自動展開もしない） ---
+        // --- 高度な設定のステータス ---
         val isShizukuRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
-        tvShizukuStatus.text = if (isShizukuRunning) "✅ Shizuku: 実行中" else "❌ Shizuku: 停止中"
+        val isShizukuPermitted = if (isShizukuRunning) {
+            try { Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED } catch (e: Throwable) { false }
+        } else false
+
+        if (isShizukuPermitted) {
+            tvShizukuStatus.text = "✅ Shizuku: 許可済み"
+        } else if (isShizukuRunning) {
+            tvShizukuStatus.text = "⚠️ Shizuku: 権限未許可"
+        } else {
+            tvShizukuStatus.text = "❌ Shizuku: 停止中"
+        }
         btnShizukuLaunch.visibility = View.VISIBLE
 
         val isFlagEnabled = prefs.getBoolean("flag_cts_enabled", true)
         tvFlagStatus.text = if (isFlagEnabled) "✅ GMSフラグ" else "❌ GMSフラグ: 無効"
         btnReapplyFlag.visibility = View.VISIBLE
-        // ---------------------------------------------------------------------------------
+        // ------------------------------
 
         // メインステータスヘッダー
         if (hasError) {
