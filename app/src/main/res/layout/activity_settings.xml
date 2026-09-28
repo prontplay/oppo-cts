@@ -36,7 +36,7 @@
                 android:text="更新" />
         </LinearLayout>
 
-        <!-- ② アコーディオン付きステータスカード -->
+        <!-- ステータス一覧カード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                         android:paddingEnd="4dp" />
                 </LinearLayout>
 
-                <!-- アコーディオン詳細コンテナ（開閉対象） -->
+                <!-- アコーディオン詳細コンテナ -->
                 <LinearLayout
                     android:id="@+id/layout_status_details"
                     android:layout_width="match_parent"
@@ -118,7 +118,17 @@
                         android:textSize="15sp"
                         android:text="Google アプリ: 確認中..." />
 
-                    <!-- 3. Gemini -->
+                    <!-- 3. Google 音声認識と合成 -->
+                    <TextView
+                        android:id="@+id/tv_speech_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="6dp"
+                        android:textSize="15sp"
+                        android:text="Google 音声認識と合成: 確認中..." />
+
+                    <!-- 4. Gemini -->
                     <TextView
                         android:id="@+id/tv_gemini_status"
                         android:layout_width="match_parent"
@@ -128,7 +138,7 @@
                         android:textSize="15sp"
                         android:text="Gemini: 確認中..." />
 
-                    <!-- 4. Shizuku -->
+                    <!-- 5. Shizuku -->
                     <TextView
                         android:id="@+id/tv_shizuku_status"
                         android:layout_width="match_parent"
@@ -138,7 +148,7 @@
                         android:textSize="15sp"
                         android:text="Shizuku: 確認中..." />
 
-                    <!-- 5. GMSフラグ（③: テキストリンクなし ＋ 横に再適用ボタン） -->
+                    <!-- 6. GMSフラグ -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -165,7 +175,7 @@
                             android:text="再適用" />
                     </LinearLayout>
 
-                    <!-- 6. 重ねて表示 -->
+                    <!-- 7. 重ねて表示 -->
                     <TextView
                         android:id="@+id/tv_overlay_permission_status"
                         android:layout_width="match_parent"
@@ -175,7 +185,7 @@
                         android:textSize="15sp"
                         android:text="重ねて表示: 確認中..." />
 
-                    <!-- 7. ユーザー補助 -->
+                    <!-- 8. ユーザー補助 -->
                     <TextView
                         android:id="@+id/tv_accessibility_status"
                         android:layout_width="match_parent"
@@ -185,17 +195,34 @@
                         android:textSize="15sp"
                         android:text="ユーザー補助: 確認中..." />
 
-                    <!-- 8. アシスタント -->
-                    <TextView
-                        android:id="@+id/tv_assistant_status"
+                    <!-- 9. アシスタント (①: 設定ボタン付き) -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="アシスタント: 確認中..." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
 
-                    <!-- 9. バックグラウンド実行（④: 許可テキスト ＋ 横に設定ボタン） -->
+                        <TextView
+                            android:id="@+id/tv_assistant_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="アシスタント: 確認中..." />
+
+                        <Button
+                            android:id="@+id/btn_assistant_settings"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="設定" />
+                    </LinearLayout>
+
+                    <!-- 10. バックグラウンド (②: バックグラウンド：許可) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -209,7 +236,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="15sp"
-                            android:text="バックグラウンド実行: 許可" />
+                            android:text="バックグラウンド: 許可" />
 
                         <Button
                             android:id="@+id/btn_battery_settings"
@@ -232,7 +259,7 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp" />
 
-                <!-- 初期セットアップを再実行（アコーディオンの外に常時表示） -->
+                <!-- 初期セットアップを再実行 -->
                 <Button
                     android:id="@+id/btn_rerun_setup"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -257,10 +284,11 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <!-- ⑤ 文言変更 -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="トリガー方式"
+                    android:text="かこって検索の起動方法"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
@@ -271,7 +299,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp" />
 
-                <!-- 方式0: ナビバー長押し用オーバーレイ調整コンテナ -->
+                <!-- ナビバー長押し用オーバーレイ調整 -->
                 <LinearLayout
                     android:id="@+id/layout_overlay_settings"
                     android:layout_width="match_parent"
@@ -318,7 +346,7 @@
                         android:max="200" />
                 </LinearLayout>
 
-                <!-- 方式1: クイック設定タイル用説明コンテナ（⑥） -->
+                <!-- クイック設定タイル説明 -->
                 <LinearLayout
                     android:id="@+id/layout_tile_desc"
                     android:layout_width="match_parent"
@@ -331,12 +359,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💡 クイック設定タイルの使い方\n端末の画面上部から通知パネル（コントロールセンター）を引き下げ、編集メニューから「OPPO CTS」タイルを追加してご使用ください。"
+                        android:text="💡 クイック設定タイルの使い方\n端末の画面上部からコントロールセンターを引き下げ、編集メニューから「OPPO CTS」タイルを追加してご使用ください。"
                         android:textSize="13sp"
                         android:lineSpacingExtra="3dp" />
                 </LinearLayout>
 
-                <!-- 方式2: アプリアイコンタップ用説明コンテナ（⑤） -->
+                <!-- アプリアイコンタップ説明 -->
                 <LinearLayout
                     android:id="@+id/layout_shortcut_desc"
                     android:layout_width="match_parent"
@@ -354,7 +382,7 @@
                         android:lineSpacingExtra="3dp" />
                 </LinearLayout>
 
-                <!-- ⑤⑥ 起動遅延設定コンテナ（アプリアイコンタップまたはタイル時に表示） -->
+                <!-- 起動遅延設定 -->
                 <LinearLayout
                     android:id="@+id/layout_delay_settings"
                     android:layout_width="match_parent"
@@ -385,12 +413,14 @@
                         android:max="10" />
                 </LinearLayout>
 
+                <!-- ⑥ CTS起動テストボタン（ナビバー長押し時は非表示） -->
                 <Button
                     android:id="@+id/btn_test_cts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="CTS起動テスト (即時実行)"
-                    android:layout_marginTop="16dp" />
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
