@@ -29,14 +29,21 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var layoutStatusDetails: LinearLayout
 
     private lateinit var tvGmsStatus: TextView
+    private lateinit var btnGmsSettings: Button
     private lateinit var tvGoogleStatus: TextView
+    private lateinit var btnGoogleStore: Button
     private lateinit var tvSpeechStatus: TextView
+    private lateinit var btnSpeechStore: Button
     private lateinit var tvGeminiStatus: TextView
+    private lateinit var btnGeminiStore: Button
     private lateinit var tvShizukuStatus: TextView
+    private lateinit var btnShizukuLaunch: Button
     private lateinit var tvFlagStatus: TextView
     private lateinit var btnReapplyFlag: Button
     private lateinit var tvOverlayPermissionStatus: TextView
+    private lateinit var btnOverlaySettings: Button
     private lateinit var tvAccessibilityStatus: TextView
+    private lateinit var btnAccessibilitySettings: Button
     private lateinit var tvAssistantStatus: TextView
     private lateinit var btnAssistantSettings: Button
     private lateinit var tvBatteryStatus: TextView
@@ -61,7 +68,6 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var seekbarOverlayOffset: SeekBar
     private lateinit var seekbarOverlayHeight: SeekBar
 
-    // ② ユーザーの手動開閉操作を記憶するフラグ（初期値null = 未操作）
     private var userAccordionState: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,14 +94,21 @@ class SettingsActivity : AppCompatActivity() {
         layoutStatusDetails = findViewById(R.id.layout_status_details)
 
         tvGmsStatus = findViewById(R.id.tv_gms_status)
+        btnGmsSettings = findViewById(R.id.btn_gms_settings)
         tvGoogleStatus = findViewById(R.id.tv_google_status)
+        btnGoogleStore = findViewById(R.id.btn_google_store)
         tvSpeechStatus = findViewById(R.id.tv_speech_status)
+        btnSpeechStore = findViewById(R.id.btn_speech_store)
         tvGeminiStatus = findViewById(R.id.tv_gemini_status)
+        btnGeminiStore = findViewById(R.id.btn_gemini_store)
         tvShizukuStatus = findViewById(R.id.tv_shizuku_status)
+        btnShizukuLaunch = findViewById(R.id.btn_shizuku_launch)
         tvFlagStatus = findViewById(R.id.tv_flag_status)
         btnReapplyFlag = findViewById(R.id.btn_reapply_flag)
         tvOverlayPermissionStatus = findViewById(R.id.tv_overlay_permission_status)
+        btnOverlaySettings = findViewById(R.id.btn_overlay_settings)
         tvAccessibilityStatus = findViewById(R.id.tv_accessibility_status)
+        btnAccessibilitySettings = findViewById(R.id.btn_accessibility_settings)
         tvAssistantStatus = findViewById(R.id.tv_assistant_status)
         btnAssistantSettings = findViewById(R.id.btn_assistant_settings)
         tvBatteryStatus = findViewById(R.id.tv_battery_status)
@@ -120,7 +133,8 @@ class SettingsActivity : AppCompatActivity() {
         seekbarOverlayOffset = findViewById(R.id.seekbar_overlay_offset)
         seekbarOverlayHeight = findViewById(R.id.seekbar_overlay_height)
 
-        val triggerOptions = arrayOf("ナビバー長押し (推奨)", "クイック設定タイル", "アプリアイコンタップ")
+        // ⑤ ジェスチャーバー長押し (推奨) に変更
+        val triggerOptions = arrayOf("ジェスチャーバー長押し (推奨)", "クイック設定タイル", "アプリアイコンタップ")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, triggerOptions)
         spinnerTriggerMethod.adapter = adapter
 
@@ -147,7 +161,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupListeners() {
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
 
-        // ② アコーディオン開閉リスナー
         layoutStatusHeader.setOnClickListener {
             val nextState = (layoutStatusDetails.visibility != View.VISIBLE)
             userAccordionState = nextState
@@ -171,6 +184,20 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        // 各項目のボタンリスナー設定
+        btnGmsSettings.setOnClickListener { openOppoGoogleSettings() }
+        btnGoogleStore.setOnClickListener { openGooglePlayStore("com.google.android.googlequicksearchbox") }
+        btnSpeechStore.setOnClickListener { openGooglePlayStore("com.google.android.tts") }
+        btnGeminiStore.setOnClickListener { openGooglePlayStore("com.google.android.apps.bard") }
+
+        btnShizukuLaunch.setOnClickListener {
+            if (isAppInstalled("moe.shizuku.privileged.api")) {
+                packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { startActivity(it) }
+            } else {
+                openGooglePlayStore("moe.shizuku.privileged.api")
+            }
+        }
+
         btnReapplyFlag.setOnClickListener {
             try {
                 val method = GmsFlagSetter::class.java.methods.firstOrNull { it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType }
@@ -181,7 +208,9 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        // ① アシスタント設定画面を直接開く
+        btnOverlaySettings.setOnClickListener { openOverlayPermission() }
+        btnAccessibilitySettings.setOnClickListener { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+
         btnAssistantSettings.setOnClickListener {
             try {
                 startActivity(Intent(Settings.ACTION_VOICE_INPUT_SETTINGS))
@@ -194,7 +223,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        // ② バックグラウンド設定ボタン
         btnBatterySettings.setOnClickListener {
             try {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -268,19 +296,16 @@ class SettingsActivity : AppCompatActivity() {
         tvAccordionIndicator.text = if (expand) "▲" else "▼"
     }
 
-    // ⑥ ナビバー長押し時はCTS起動テストボタンを非表示
     private fun updateTriggerMethodUI(method: Int) {
         when (method) {
             0 -> {
-                // ナビバー長押し
                 layoutOverlaySettings.visibility = View.VISIBLE
                 layoutTileDesc.visibility = View.GONE
                 layoutShortcutDesc.visibility = View.GONE
                 layoutDelaySettings.visibility = View.GONE
-                btnTestCts.visibility = View.GONE // ⑥ 非表示
+                btnTestCts.visibility = View.GONE
             }
             1 -> {
-                // クイック設定タイル
                 layoutOverlaySettings.visibility = View.GONE
                 layoutTileDesc.visibility = View.VISIBLE
                 layoutShortcutDesc.visibility = View.GONE
@@ -288,7 +313,6 @@ class SettingsActivity : AppCompatActivity() {
                 btnTestCts.visibility = View.VISIBLE
             }
             2 -> {
-                // アプリアイコンタップ
                 layoutOverlaySettings.visibility = View.GONE
                 layoutTileDesc.visibility = View.GONE
                 layoutShortcutDesc.visibility = View.VISIBLE
@@ -329,6 +353,16 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    // ② Speech Recognition & Synthesis の複数パッケージ判定
+    private fun isSpeechInstalled(): Boolean {
+        val candidates = arrayOf(
+            "com.google.android.tts",
+            "com.google.android.speech.recognition",
+            "com.google.android.googlequicksearchbox"
+        )
+        return candidates.any { isAppInstalled(it) }
+    }
+
     private fun openGooglePlayStore(pkg: String) {
         val playStorePkg = "com.android.vending"
         try {
@@ -341,7 +375,6 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    // ③ ColorOSの「Googleモバイルサービス」画面を優先ターゲット
     private fun openOppoGoogleSettings() {
         val candidates = arrayOf(
             Intent().setComponent(ComponentName("com.coloros.google", "com.coloros.google.GoogleSettingsActivity")),
@@ -365,117 +398,108 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateStatus() {
         var hasError = false
 
-        // 1. GMS
+        // 1. GMS (アイコンのみ)
         val isGmsActive = isAppInstalled("com.google.android.gms")
         if (isGmsActive) {
-            tvGmsStatus.text = "✅ GMS: 有効"
-            tvGmsStatus.setOnClickListener { openOppoGoogleSettings() }
+            tvGmsStatus.text = "✅ GMS"
+            btnGmsSettings.visibility = View.VISIBLE
         } else {
             hasError = true
-            tvGmsStatus.text = "❌ GMS: 無効 (タップで設定へ)"
-            tvGmsStatus.setOnClickListener { openOppoGoogleSettings() }
+            tvGmsStatus.text = "❌ GMS"
+            btnGmsSettings.visibility = View.VISIBLE
         }
 
-        // 2. Google アプリ
+        // 2. Google アプリ (アイコンのみ)
         val isGoogleInstalled = isAppInstalled("com.google.android.googlequicksearchbox")
         if (isGoogleInstalled) {
-            tvGoogleStatus.text = "✅ Google アプリ: インストール済み"
-            tvGoogleStatus.setOnClickListener { openGooglePlayStore("com.google.android.googlequicksearchbox") }
+            tvGoogleStatus.text = "✅ Google アプリ"
+            btnGoogleStore.visibility = View.GONE
         } else {
             hasError = true
-            tvGoogleStatus.text = "❌ Google アプリ: 未インストール (タップでPlayストアへ)"
-            tvGoogleStatus.setOnClickListener { openGooglePlayStore("com.google.android.googlequicksearchbox") }
+            tvGoogleStatus.text = "❌ Google アプリ"
+            btnGoogleStore.visibility = View.VISIBLE
         }
 
-        // 3. Speech Recognition & Synthesis (④)
-        val isSpeechInstalled = isAppInstalled("com.google.android.tts")
-        if (isSpeechInstalled) {
-            tvSpeechStatus.text = "✅ Google 音声認識と合成: インストール済み"
-            tvSpeechStatus.setOnClickListener { openGooglePlayStore("com.google.android.tts") }
+        // 3. Speech Recognition & Synthesis (アイコンのみ)
+        if (isSpeechInstalled()) {
+            tvSpeechStatus.text = "✅ Google 音声認識と合成"
+            btnSpeechStore.visibility = View.GONE
         } else {
             hasError = true
-            tvSpeechStatus.text = "❌ Google 音声認識と合成: 未インストール (タップでPlayストアへ)"
-            tvSpeechStatus.setOnClickListener { openGooglePlayStore("com.google.android.tts") }
+            tvSpeechStatus.text = "❌ Google 音声認識と合成"
+            btnSpeechStore.visibility = View.VISIBLE
         }
 
-        // 4. Gemini
+        // 4. Gemini (アイコンのみ)
         val isGeminiInstalled = isAppInstalled("com.google.android.apps.bard")
         if (isGeminiInstalled) {
-            tvGeminiStatus.text = "✅ Gemini: インストール済み"
-            tvGeminiStatus.setOnClickListener { openGooglePlayStore("com.google.android.apps.bard") }
+            tvGeminiStatus.text = "✅ Gemini"
+            btnGeminiStore.visibility = View.GONE
         } else {
-            tvGeminiStatus.text = "⚪ Gemini: 未インストール (タップでPlayストアへ)"
-            tvGeminiStatus.setOnClickListener { openGooglePlayStore("com.google.android.apps.bard") }
+            tvGeminiStatus.text = "⚪ Gemini"
+            btnGeminiStore.visibility = View.VISIBLE
         }
 
-        // 5. Shizuku
+        // 5. Shizuku (④: 詳細文字ステータスを表示)
         val isShizukuRunning = try { Shizuku.pingBinder() } catch (e: Throwable) { false }
         if (isShizukuRunning) {
             tvShizukuStatus.text = "✅ Shizuku: 実行中"
-            tvShizukuStatus.setOnClickListener {
-                packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { startActivity(it) }
-            }
+            btnShizukuLaunch.visibility = View.GONE
         } else {
             hasError = true
-            tvShizukuStatus.text = "❌ Shizuku: 停止中または未接続 (タップでShizuku起動)"
-            tvShizukuStatus.setOnClickListener {
-                if (isAppInstalled("moe.shizuku.privileged.api")) {
-                    packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { startActivity(it) }
-                } else {
-                    openGooglePlayStore("moe.shizuku.privileged.api")
-                }
-            }
+            tvShizukuStatus.text = "❌ Shizuku: 停止中"
+            btnShizukuLaunch.visibility = View.VISIBLE
         }
 
-        // 6. GMSフラグ
-        tvFlagStatus.text = "✅ GMSフラグ: 設定済み"
+        // 6. GMSフラグ (アイコンのみ)
+        tvFlagStatus.text = "✅ GMSフラグ"
 
-        // 7. 重ねて表示
+        // 7. 重ねて表示 (アイコンのみ)
         val canDraw = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(this) else true
         if (canDraw) {
-            tvOverlayPermissionStatus.text = "✅ 重ねて表示: 許可済み"
-            tvOverlayPermissionStatus.setOnClickListener { openOverlayPermission() }
+            tvOverlayPermissionStatus.text = "✅ 重ねて表示"
+            btnOverlaySettings.visibility = View.GONE
         } else {
             hasError = true
-            tvOverlayPermissionStatus.text = "❌ 重ねて表示: 未許可 (タップで権限設定へ)"
-            tvOverlayPermissionStatus.setOnClickListener { openOverlayPermission() }
+            tvOverlayPermissionStatus.text = "❌ 重ねて表示"
+            btnOverlaySettings.visibility = View.VISIBLE
         }
 
-        // 8. ユーザー補助
+        // 8. ユーザー補助 (アイコンのみ)
         val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
         val isA11yActive = enabledServices.contains("com.oppocts.service.OppoAccessibilityService")
         if (isA11yActive) {
-            tvAccessibilityStatus.text = "✅ ユーザー補助: 有効"
-            tvAccessibilityStatus.setOnClickListener { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+            tvAccessibilityStatus.text = "✅ ユーザー補助"
+            btnAccessibilitySettings.visibility = View.GONE
         } else {
             hasError = true
-            tvAccessibilityStatus.text = "❌ ユーザー補助: 無効 (タップで設定を開く)"
-            tvAccessibilityStatus.setOnClickListener { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+            tvAccessibilityStatus.text = "❌ ユーザー補助"
+            btnAccessibilitySettings.visibility = View.VISIBLE
         }
 
-        // 9. デフォルトアシスタント (①: 設定ボタン付き)
+        // 9. デフォルトアシスタント (④: 詳細文字ステータスを表示)
         val currentAssistant = Settings.Secure.getString(contentResolver, "voice_interaction_service")
         if (currentAssistant != null && currentAssistant.contains("com.google.android.googlequicksearchbox")) {
             tvAssistantStatus.text = "✅ アシスタント: Google"
+            btnAssistantSettings.visibility = View.VISIBLE
         } else {
             hasError = true
             val appName = getAppNameFromComponent(currentAssistant)
             tvAssistantStatus.text = "❌ アシスタント: ${appName ?: "未設定"}"
+            btnAssistantSettings.visibility = View.VISIBLE
         }
 
-        // 10. バックグラウンド (②: バックグラウンド：許可)
+        // 10. バックグラウンド (アイコンのみ)
         tvBatteryStatus.text = "✅ バックグラウンド: 許可"
 
-        // ② アコーディオン開閉状態の維持
+        // ③ ヘッダーの文字を「設定ステータス: ❌」または「設定ステータス: ✅」に簡略化
         if (hasError) {
-            tvMainStatusHeader.text = "設定ステータス: ❌ 要設定項目あり"
-            // エラー時はユーザーが明示的に閉じていない限り開く
+            tvMainStatusHeader.text = "設定ステータス: ❌"
             if (userAccordionState != false) {
                 toggleAccordion(true)
             }
         } else {
-            tvMainStatusHeader.text = "設定ステータス: ✅ 正常"
-            // 正常時はユーザーが手動で開いた状態（userAccordionState == true）をそのまま維持
+            tvMainStatusHeader.text = "設定ステータス: ✅"
             if (userAccordionState == true) {
                 toggleAccordion(true)
             } else {
