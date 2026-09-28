@@ -13,6 +13,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import com.oppocts.R
@@ -24,7 +25,7 @@ import rikka.shizuku.Shizuku
 class SetupWizardActivity : AppCompatActivity() {
 
     private var currentStep = 1
-    private val totalSteps = 11 // ④ 音声認識と合成を追加して全11ステップ
+    private val totalSteps = 11
 
     private lateinit var tvStepTitle: TextView
     private lateinit var tvStepDesc: TextView
@@ -111,7 +112,7 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
-    // ③ ColorOSのGoogle設定画面を確実に開くインテント
+    // ① ColorOSのGMS設定画面への誘導と確実な遷移
     private fun openOppoGoogleSettings() {
         val candidates = arrayOf(
             Intent().setComponent(ComponentName("com.coloros.google", "com.coloros.google.GoogleSettingsActivity")),
@@ -121,14 +122,22 @@ class SetupWizardActivity : AppCompatActivity() {
             Intent().setComponent(ComponentName("com.coloros.settings", "com.coloros.settings.SettingsActivity")),
             Intent(Settings.ACTION_SETTINGS)
         )
+
+        var launched = false
         for (intent in candidates) {
             try {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-                return
+                launched = true
+                break
             } catch (e: Exception) {
                 // 次を試行
             }
+        }
+
+        // ColorOSで万一トップが開いてしまった場合のガイドダイアログ
+        if (launched) {
+            Toast.makeText(this, "「システムおよび更新」→「Google設定」を確認してください", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -140,8 +149,8 @@ class SetupWizardActivity : AppCompatActivity() {
             // 1. GMS有効化
             1 -> {
                 tvStepTitle.text = "ステップ 1: GMS（Googleモバイルサービス）の有効化"
-                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンをタップしてOppoのGoogle設定を開き、トグルスイッチがONになっていることを確認してください。"
-                btnAction.text = "Google設定を開く"
+                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンを押して設定を開き、\n【システムおよび更新】→【Google設定】\nにある「Googleモバイルサービス（GMS）」がONになっていることを確認してください。"
+                btnAction.text = "設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener { openOppoGoogleSettings() }
             }
@@ -155,7 +164,7 @@ class SetupWizardActivity : AppCompatActivity() {
                     openGooglePlayStore("com.google.android.googlequicksearchbox")
                 }
             }
-            // 3 (④新設). Speech Recognition & Synthesis
+            // 3. Speech Recognition & Synthesis
             3 -> {
                 tvStepTitle.text = "ステップ 3: Speech Recognition & Synthesis の導入"
                 tvStepDesc.text = "かこって検索やアシスタントの音声・マルチモーダル処理に必要な「Google 音声認識と合成（Speech Recognition & Synthesis）」をインストールまたは更新してください。"
@@ -248,7 +257,7 @@ class SetupWizardActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
             }
-            // 9. アシスタント (①: アシスタント設定画面を直接開く)
+            // 9. アシスタント
             9 -> {
                 tvStepTitle.text = "ステップ 9: デフォルトアシスタントの変更"
                 tvStepDesc.text = "かこって検索を利用するには、端末のデジタルアシスタントを「Google」に指定する必要があります。\n\n下のボタンを押してアシスタント設定を開き、デフォルトのアシスタントアプリを「Google」に設定してください。"
@@ -285,8 +294,8 @@ class SetupWizardActivity : AppCompatActivity() {
             }
             // 11. 初回起動時の注意
             11 -> {
-                tvStepTitle.text = "ステップ 11: すべての準備が整いました！"
-                tvStepDesc.text = "すべての準備が完了しました。\n\n⚠️【初回起動時の注意】\n初めてアプリを起動した際、システムから\n「ユーザー補助へのアクセスを付与されています」\nという確認画面が表示される場合があります。\n\nその際は必ず【オンのままにする】を選択してください。（オフにするとジェスチャー検知が停止します）"
+                tvStepTitle.text = "すべての準備が整いました！"
+                tvStepDesc.text = "\n⚠️【初回起動時の注意】\n初めてアプリを起動した際、システムから\n「ユーザー補助へのアクセスを付与されています」\nという確認画面が表示される場合があります。\n\nその際は必ず【オンのままにする】を選択してください。（オフにするとジェスチャー検知が停止します）"
                 btnAction.visibility = View.GONE
             }
         }
