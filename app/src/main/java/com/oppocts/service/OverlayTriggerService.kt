@@ -79,7 +79,7 @@ class OverlayTriggerService : Service() {
         }
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("OPPO CTS")
+            .setContentTitle("CTS Launcher")
             .setContentText("トリガーサービス実行中")
             .setSmallIcon(R.drawable.ic_cts)
             .setPriority(NotificationCompat.PRIORITY_MIN)
