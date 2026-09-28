@@ -12,15 +12,31 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- ヘッダー（タイトルと更新ボタンが絶対に被らない横並びレイアウト） -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OPPO CTS 設定"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-        <!-- ステータス一覧カード -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="OPPO CTS 設定"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_refresh"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更新" />
+        </LinearLayout>
+
+        <!-- ステータス一覧カード（ウィザードの順序に完全一致） -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,36 +50,15 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ステータス (タップで設定へ移動)"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btn_refresh"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="更新" />
-                </RelativeLayout>
-
                 <TextView
-                    android:id="@+id/tv_google_status"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:padding="6dp"
+                    android:text="ステータス (タップで設定へ移動)"
                     android:textSize="15sp"
-                    android:text="Google アプリ: 確認中..." />
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
 
+                <!-- 1. GMS -->
                 <TextView
                     android:id="@+id/tv_gms_status"
                     android:layout_width="match_parent"
@@ -73,6 +68,27 @@
                     android:textSize="15sp"
                     android:text="GMS: 確認中..." />
 
+                <!-- 2. Googleアプリ -->
+                <TextView
+                    android:id="@+id/tv_google_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="Google アプリ: 確認中..." />
+
+                <!-- 3. Gemini -->
+                <TextView
+                    android:id="@+id/tv_gemini_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="Gemini: 確認中..." />
+
+                <!-- 4. Shizuku -->
                 <TextView
                     android:id="@+id/tv_shizuku_status"
                     android:layout_width="match_parent"
@@ -82,6 +98,27 @@
                     android:textSize="15sp"
                     android:text="Shizuku: 確認中..." />
 
+                <!-- 5. GMSフラグ -->
+                <TextView
+                    android:id="@+id/tv_flag_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="GMSフラグ: 確認中..." />
+
+                <!-- 6. 重ねて表示 -->
+                <TextView
+                    android:id="@+id/tv_overlay_permission_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="6dp"
+                    android:textSize="15sp"
+                    android:text="重ねて表示: 確認中..." />
+
+                <!-- 7. ユーザー補助 -->
                 <TextView
                     android:id="@+id/tv_accessibility_status"
                     android:layout_width="match_parent"
@@ -91,6 +128,7 @@
                     android:textSize="15sp"
                     android:text="ユーザー補助: 確認中..." />
 
+                <!-- 8. アシスタント -->
                 <TextView
                     android:id="@+id/tv_assistant_status"
                     android:layout_width="match_parent"
@@ -100,14 +138,31 @@
                     android:textSize="15sp"
                     android:text="アシスタント: 確認中..." />
 
+                <!-- 9. バックグラウンド実行 -->
                 <TextView
-                    android:id="@+id/tv_flag_status"
+                    android:id="@+id/tv_battery_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="6dp"
                     android:textSize="15sp"
-                    android:text="GMSフラグ: 確認中..." />
+                    android:text="バックグラウンド実行: 確認中..." />
+
+                <!-- 区切り線 -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/dividerVertical"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- 初期セットアップを再実行（ステータスカード最下部） -->
+                <Button
+                    android:id="@+id/btn_rerun_setup"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="初期セットアップを再実行" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -170,7 +225,7 @@
                     android:id="@+id/tv_offset_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Y軸オフセット (下への突き当て調整): 0px"
+                    android:text="トリガー位置の調整: 0px"
                     android:layout_marginTop="12dp" />
 
                 <SeekBar
@@ -179,83 +234,12 @@
                     android:layout_height="wrap_content"
                     android:max="200" />
 
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- 操作 & テストカード -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="操作 &amp; 権限設定"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
-
                 <Button
                     android:id="@+id/btn_test_cts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="CTS起動テスト (即時実行)"
-                    android:layout_marginBottom="8dp" />
-
-                <Button
-                    android:id="@+id/btn_open_accessibility"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="ユーザー補助設定を開く"
-                    android:layout_marginBottom="8dp" />
-
-                <Button
-                    android:id="@+id/btn_open_overlay_permission"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="重ねて表示の権限を開く"
-                    android:layout_marginBottom="8dp" />
-
-                <Button
-                    android:id="@+id/btn_open_battery_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="バックグラウンド実行（電池設定）を開く"
-                    android:layout_marginBottom="8dp" />
-
-                <Button
-                    android:id="@+id/btn_rerun_setup"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="初期セットアップを再実行" />
-
-                <Button
-                    android:id="@+id/btn_key_test"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/btn_intent_test"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/tv_key_log"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
+                    android:layout_marginTop="16dp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
