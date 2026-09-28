@@ -111,24 +111,27 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
-    // 元の実装通り Settings$GoogleSettingsActivity を直接指定
+    // ③ ColorOSの「Googleモバイルサービス」画面へダイレクトに遷移
     private fun openOppoGoogleSettings() {
-        try {
-            val intent = Intent().apply {
-                component = ComponentName("com.android.settings", "com.android.settings.Settings\$GoogleSettingsActivity")
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            startActivity(intent)
-        } catch (e: Exception) {
+        val candidates = arrayOf(
+            Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.SubSettings")).apply {
+                putExtra(":settings:show_fragment", "com.android.settings.GoogleSettings")
+            },
+            Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.Settings\$GoogleSettingsActivity")),
+            Intent("com.coloros.settings.GOOGLE_SETTINGS"),
+            Intent(Settings.ACTION_SYNC_SETTINGS)
+        )
+
+        for (intent in candidates) {
             try {
-                val intent = Intent("com.android.settings.GOOGLE_SETTINGS").apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                }
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-            } catch (ex: Exception) {
-                startActivity(Intent(Settings.ACTION_SETTINGS))
+                return
+            } catch (e: Exception) {
+                // 次の候補
             }
         }
+        startActivity(Intent(Settings.ACTION_SETTINGS))
     }
 
     private fun updateUI() {
@@ -139,7 +142,7 @@ class SetupWizardActivity : AppCompatActivity() {
             // 1. GMS有効化
             1 -> {
                 tvStepTitle.text = "ステップ 1: GMS（Googleモバイルサービス）の有効化"
-                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンを押してGoogle設定を開き、「Googleモバイルサービス（GMS）」がONになっていることを確認してください。"
+                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンを押して設定を開き、「Googleモバイルサービス（GMS）」がONになっていることを確認してください。"
                 btnAction.text = "Google設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener { openOppoGoogleSettings() }
