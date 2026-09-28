@@ -98,7 +98,7 @@ class OverlayTriggerService : Service() {
 
         // 투명 터치 감지 뷰 생성
         overlayView = View(this).apply {
-            setBackgroundColor(Color.TRANSPARENT) // 디버그 시 Color.parseColor("#44FF0000") 등으로 테스트 가능
+            setBackgroundColor(Color.TRANSPARENT)
 
             setOnTouchListener { _, event ->
                 when (event.action) {
@@ -107,13 +107,12 @@ class OverlayTriggerService : Service() {
                         initialY = event.y
                         isLongPressDetected = false
                         handler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT_MS)
-                        true // 터치 이벤트 소비 시작
+                        true
                     }
 
                     MotionEvent.ACTION_MOVE -> {
                         val dx = Math.abs(event.x - initialX)
                         val dy = Math.abs(event.y - initialY)
-                        // 손가락이 범위를 벗어나 움직이면(위로 스와이프하여 홈으로 가거나 앱 전환 시) 길게 누르기 취소
                         if (dx > MOVE_SLOP_PX || dy > MOVE_SLOP_PX) {
                             handler.removeCallbacks(longPressRunnable)
                         }
@@ -131,7 +130,7 @@ class OverlayTriggerService : Service() {
         }
 
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
-        val heightPx = prefs.getInt("trigger_height_px", 70) // 기본 하단 바 높이
+        val heightPx = prefs.getInt("trigger_height_px", 70)
         val yOffsetPx = prefs.getInt("trigger_y_offset_px", 0)
 
         val layoutParams = WindowManager.LayoutParams(
@@ -156,13 +155,19 @@ class OverlayTriggerService : Service() {
     }
 
     private fun triggerCTS() {
-        // 길게 누르기 감지 시 햅틱(진동) 피ードバックを実行
+        // 純正CTS準拠のハプティクス（触覚フィードバック）を実行
         try {
             val vibrator = getSystemService(Vibrator::class.java)
             if (vibrator != null && vibrator.hasVibrator()) {
-                vibrator.vibrate(
-                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    vibrator.vibrate(
+                        VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK)
+                    )
+                } else {
+                    vibrator.vibrate(
+                        VibrationEffect.createOneShot(25, VibrationEffect.DEFAULT_AMPLITUDE)
+                    )
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to vibrate", e)
