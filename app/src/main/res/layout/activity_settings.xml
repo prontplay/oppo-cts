@@ -50,7 +50,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- アコーディオンヘッダー（③: ❌または✅のみ表示） -->
+                <!-- アコーディオンヘッダー -->
                 <LinearLayout
                     android:id="@+id/layout_status_header"
                     android:layout_width="match_parent"
@@ -190,7 +190,7 @@
                             android:text="ストア" />
                     </LinearLayout>
 
-                    <!-- 5. Shizuku (④: 詳細文字ステータスを表示) -->
+                    <!-- 5. Shizuku -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                             android:text="起動" />
                     </LinearLayout>
 
-                    <!-- 6. GMSフラグ -->
+                    <!-- 6. GMSフラグ（再適用 → 設定に変更） -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -237,7 +237,7 @@
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
                             android:textSize="12sp"
-                            android:text="再適用" />
+                            android:text="設定" />
                     </LinearLayout>
 
                     <!-- 7. 重ねて表示 -->
@@ -290,7 +290,7 @@
                             android:text="設定" />
                     </LinearLayout>
 
-                    <!-- 9. アシスタント (④: 詳細文字ステータスを表示) -->
+                    <!-- 9. アシスタント -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -503,7 +503,6 @@
                         android:max="10" />
                 </LinearLayout>
 
-                <!-- CTS起動テストボタン（ナビバー長押し時は非表示） -->
                 <Button
                     android:id="@+id/btn_test_cts"
                     android:layout_width="match_parent"
