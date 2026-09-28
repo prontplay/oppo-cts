@@ -3,7 +3,12 @@
     <string name="app_name">OPPO CTS</string>
     <string name="tile_label">かこって検索</string>
 
-    <!-- ユーザー補助サービスの説明文（リンクエラー解消） -->
+    <!-- MainActivity用 -->
+    <string name="cts_trigger_success">かこって検索を起動しました</string>
+    <string name="cts_trigger_failed">かこって検索の起動に失敗しました</string>
+    <string name="google_app_not_found">Googleアプリが見つかりません</string>
+
+    <!-- ユーザー補助サービス設定用 -->
     <string name="accessibility_service_description">かこって検索（Circle to Search）のジェスチャー検知および起動を行うためのサービスです。</string>
 
     <!-- ショートカット用ラベル -->
@@ -19,10 +24,15 @@
     <string name="btn_check">確認</string>
     <string name="btn_install">インストール</string>
     <string name="btn_apply">適用</string>
+    <string name="btn_skip">スキップ</string>
     <string name="setup_complete">初期設定が完了しました</string>
+    <string name="setup_title">OPPO CTS セットアップ</string>
+    <string name="setup_complete_desc">初期設定が完了しました。設定画面で詳細な調整が可能です。</string>
 
-    <!-- セットアップ・ステータス用 -->
+    <!-- Shizuku・アシスタント・GMS関連 -->
     <string name="shizuku_not_running">Shizukuが実行されていません</string>
+    <string name="shizuku_not_installed">Shizukuがインストールされていません</string>
+    <string name="shizuku_permission_denied">Shizukuの権限が拒否されました</string>
     <string name="assistant_set_success">デフォルトアシスタントをGoogleに変更しました</string>
     <string name="assistant_set_failed">アシスタントの変更に失敗しました</string>
     <string name="gms_flag_set_success">GMSフラグを設定しました</string>
@@ -43,4 +53,20 @@
     <string name="setup_step_gemini_desc">必要に応じてGeminiをインストールしてください。</string>
     <string name="setup_step_trigger">ステップ 7: トリガー設定</string>
     <string name="setup_step_trigger_desc">起動方法を設定してください。</string>
+
+    <!-- 設定画面ステータス互換用 -->
+    <string name="settings_title">OPPO CTS 設定</string>
+    <string name="settings_status">ステータス</string>
+    <string name="settings_status_active">有効</string>
+    <string name="settings_status_inactive">無効</string>
+    <string name="settings_status_not_installed">未インストール</string>
+    <string name="settings_status_google">Google アプリ</string>
+    <string name="settings_status_gms">GMS</string>
+    <string name="settings_status_shizuku">Shizuku</string>
+    <string name="settings_status_accessibility">ユーザー補助</string>
+    <string name="settings_trigger_method">かこって検索の起動方法</string>
+    <string name="settings_trigger_gesture">ジェスチャーバー長押し (推奨)</string>
+    <string name="settings_trigger_tile">クイック設定タイル</string>
+    <string name="settings_trigger_app">アプリアイコンタップ</string>
+    <string name="settings_rerun_setup">初期セットアップを再実行</string>
 </resources>
