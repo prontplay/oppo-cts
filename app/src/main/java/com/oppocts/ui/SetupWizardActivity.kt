@@ -13,7 +13,6 @@ import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import com.oppocts.R
@@ -112,32 +111,23 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
-    // ① ColorOSのGMS設定画面への誘導と確実な遷移
+    // 元の実装通り Settings$GoogleSettingsActivity を直接指定
     private fun openOppoGoogleSettings() {
-        val candidates = arrayOf(
-            Intent().setComponent(ComponentName("com.coloros.google", "com.coloros.google.GoogleSettingsActivity")),
-            Intent().setComponent(ComponentName("com.oplus.google", "com.oplus.google.GoogleSettingsActivity")),
-            Intent("com.coloros.settings.GOOGLE_SETTINGS"),
-            Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.Settings\$GoogleSettingsActivity")),
-            Intent().setComponent(ComponentName("com.coloros.settings", "com.coloros.settings.SettingsActivity")),
-            Intent(Settings.ACTION_SETTINGS)
-        )
-
-        var launched = false
-        for (intent in candidates) {
-            try {
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                launched = true
-                break
-            } catch (e: Exception) {
-                // 次を試行
+        try {
+            val intent = Intent().apply {
+                component = ComponentName("com.android.settings", "com.android.settings.Settings\$GoogleSettingsActivity")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
-        }
-
-        // ColorOSで万一トップが開いてしまった場合のガイドダイアログ
-        if (launched) {
-            Toast.makeText(this, "「システムおよび更新」→「Google設定」を確認してください", Toast.LENGTH_LONG).show()
+            startActivity(intent)
+        } catch (e: Exception) {
+            try {
+                val intent = Intent("com.android.settings.GOOGLE_SETTINGS").apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+            } catch (ex: Exception) {
+                startActivity(Intent(Settings.ACTION_SETTINGS))
+            }
         }
     }
 
@@ -149,8 +139,8 @@ class SetupWizardActivity : AppCompatActivity() {
             // 1. GMS有効化
             1 -> {
                 tvStepTitle.text = "ステップ 1: GMS（Googleモバイルサービス）の有効化"
-                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンを押して設定を開き、\n【システムおよび更新】→【Google設定】\nにある「Googleモバイルサービス（GMS）」がONになっていることを確認してください。"
-                btnAction.text = "設定を開く"
+                tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンを押してGoogle設定を開き、「Googleモバイルサービス（GMS）」がONになっていることを確認してください。"
+                btnAction.text = "Google設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener { openOppoGoogleSettings() }
             }
