@@ -32,12 +32,14 @@ class OverlayTriggerService : Service() {
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "overlay_trigger_channel"
 
-        private const val LONG_PRESS_TIMEOUT_MS = 400L // 0.4초 길게 누르기
-        private const val MOVE_SLOP_PX = 30f // 스와이프 오인 방지 허용 오차
+        private const val LONG_PRESS_TIMEOUT_MS = 400L
+        private const val MOVE_SLOP_PX = 30f
+        const val ACTION_UPDATE_LAYOUT = "ACTION_UPDATE_OVERLAY_LAYOUT"
     }
 
     private var windowManager: WindowManager? = null
     private var overlayView: View? = null
+    private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
 
     private var initialX = 0f
@@ -56,6 +58,13 @@ class OverlayTriggerService : Service() {
         setupOverlay()
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == ACTION_UPDATE_LAYOUT) {
+            updateOverlayLayout()
+        }
+        return START_STICKY
+    }
+
     private fun startForegroundServiceNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -63,26 +72,21 @@ class OverlayTriggerService : Service() {
                 "Overlay Trigger Service",
                 NotificationManager.IMPORTANCE_MIN
             ).apply {
-                description = "Running invisible bottom trigger for Circle to Search"
+                description = "Running bottom trigger for Circle to Search"
                 setShowBadge(false)
             }
-            val manager = getSystemService(NotificationManager::class.java)
-            manager?.createNotificationChannel(channel)
+            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("OPPO CTS")
-            .setContentText("Bottom trigger is active")
+            .setContentText("トリガーサービス実行中")
             .setSmallIcon(R.drawable.ic_cts)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(
-                NOTIFICATION_ID,
-                notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
-            )
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
         } else {
             startForeground(NOTIFICATION_ID, notification)
         }
@@ -90,16 +94,9 @@ class OverlayTriggerService : Service() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupOverlay() {
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-        if (windowManager == null) {
-            Log.e(TAG, "WindowManager is null, cannot add overlay")
-            return
-        }
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as? WindowManager ?: return
 
-        // 투명 터치 감지 뷰 생성
         overlayView = View(this).apply {
-            setBackgroundColor(Color.TRANSPARENT)
-
             setOnTouchListener { _, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -109,7 +106,6 @@ class OverlayTriggerService : Service() {
                         handler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT_MS)
                         true
                     }
-
                     MotionEvent.ACTION_MOVE -> {
                         val dx = Math.abs(event.x - initialX)
                         val dy = Math.abs(event.y - initialY)
@@ -118,12 +114,10 @@ class OverlayTriggerService : Service() {
                         }
                         true
                     }
-
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         handler.removeCallbacks(longPressRunnable)
                         true
                     }
-
                     else -> false
                 }
             }
@@ -132,8 +126,11 @@ class OverlayTriggerService : Service() {
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
         val heightPx = prefs.getInt("trigger_height_px", 70)
         val yOffsetPx = prefs.getInt("trigger_y_offset_px", 0)
+        val isDebug = prefs.getBoolean("overlay_debug", false)
 
-        val layoutParams = WindowManager.LayoutParams(
+        overlayView?.setBackgroundColor(if (isDebug) Color.parseColor("#66FF0000") else Color.TRANSPARENT)
+
+        layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             heightPx,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
@@ -148,29 +145,45 @@ class OverlayTriggerService : Service() {
 
         try {
             windowManager?.addView(overlayView, layoutParams)
-            Log.d(TAG, "Overlay trigger view attached successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to add overlay view", e)
         }
     }
 
+    // Y軸オフセットや高さ、デバッグ色を安全にリアルタイム更新（クラッシュ防止）
+    private fun updateOverlayLayout() {
+        if (overlayView == null || windowManager == null || layoutParams == null) return
+
+        val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
+        val heightPx = prefs.getInt("trigger_height_px", 70)
+        val yOffsetPx = prefs.getInt("trigger_y_offset_px", 0)
+        val isDebug = prefs.getBoolean("overlay_debug", false)
+
+        overlayView?.setBackgroundColor(if (isDebug) Color.parseColor("#66FF0000") else Color.TRANSPARENT)
+
+        layoutParams?.height = heightPx
+        layoutParams?.y = yOffsetPx
+
+        try {
+            windowManager?.updateViewLayout(overlayView, layoutParams)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to update overlay view layout", e)
+        }
+    }
+
     private fun triggerCTS() {
-        // 純正CTS準拠のハプティクス（触覚フィードバック）を実行
+        // 純正CTS準拠の触覚フィードバック
         try {
             val vibrator = getSystemService(Vibrator::class.java)
             if (vibrator != null && vibrator.hasVibrator()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    vibrator.vibrate(
-                        VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK)
-                    )
+                    vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
                 } else {
-                    vibrator.vibrate(
-                        VibrationEffect.createOneShot(25, VibrationEffect.DEFAULT_AMPLITUDE)
-                    )
+                    vibrator.vibrate(VibrationEffect.createOneShot(25, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to vibrate", e)
+            Log.e(TAG, "Vibration failed", e)
         }
 
         CTSTrigger.trigger(this)
