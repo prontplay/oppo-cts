@@ -130,8 +130,8 @@ class OverlayTriggerService : Service() {
 
         overlayView?.setBackgroundColor(if (isDebug) Color.parseColor("#66FF0000") else Color.TRANSPARENT)
 
-        // 画面最下端（ナビゲーションバー領域）へ完全に食い込ませるフラグ群
-        var flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+        // ジェスチャーバーエリアに完全に重なり込ませるフラグ構成
+        val flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                 WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
@@ -145,7 +145,6 @@ class OverlayTriggerService : Service() {
         ).apply {
             gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
             y = yOffsetPx
-            // ディスプレイカットアウト・ナビバー領域への貫通
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
