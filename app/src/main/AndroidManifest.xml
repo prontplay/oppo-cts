@@ -2,13 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- インターネット権限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" tools:ignore="ProtectedPermissions" />
+
+    <!-- Shizuku権限 -->
+    <uses-permission
+        android:name="moe.shizuku.manager.permission.API_V23"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- 端末起動時の自動復帰 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- 画面下部トリガー用オーバーレイ権限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
+    <!-- 長押し時のバイブレーション権限 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- パッケージ可視性設定 -->
     <queries>
         <package android:name="com.google.android.googlequicksearchbox" />
         <package android:name="com.google.android.apps.bard" />
@@ -25,7 +38,7 @@
         android:theme="@style/Theme.OppoCTS"
         tools:targetApi="35">
 
-        <!-- CTS即時発火用（LAUNCHERを外し、ショートカットや外部連携用として保持） -->
+        <!-- CTS即時発火用（ショートカット・外部連携用） -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
@@ -33,6 +46,7 @@
             android:excludeFromRecents="true"
             android:taskAffinity="" />
 
+        <!-- トリガー専用 Activity -->
         <activity
             android:name=".ui.TriggerActivity"
             android:exported="true"
@@ -41,7 +55,7 @@
             android:label="Trigger CTS (No Shizuku)"
             android:taskAffinity="" />
 
-        <!-- アプリアイコンから SetupWizardActivity を直接開く -->
+        <!-- セットアップウィザード（アプリアイコンから直接起動） -->
         <activity
             android:name=".ui.SetupWizardActivity"
             android:exported="true"
@@ -52,12 +66,13 @@
             </intent-filter>
         </activity>
 
-        <!-- 設定画面も外部から開けるように開放 -->
+        <!-- 設定画面（ウィザード完了後や外部から開けるよう開放） -->
         <activity
             android:name=".ui.SettingsActivity"
             android:exported="true"
             android:theme="@style/Theme.OppoCTS" />
 
+        <!-- クイック設定タイルサービス -->
         <service
             android:name=".trigger.CTSTileService"
             android:icon="@drawable/ic_cts"
@@ -69,6 +84,7 @@
             </intent-filter>
         </service>
 
+        <!-- ユーザー補助サービス（ジェスチャー検知） -->
         <service
             android:name=".service.OppoAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
@@ -81,14 +97,17 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
+        <!-- 画面下部透明オーバーレイサービス -->
         <service
             android:name=".service.OverlayTriggerService"
             android:exported="false"
             android:foregroundServiceType="specialUse">
-            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Floating trigger for Circle to Search" />
         </service>
 
+        <!-- Shizuku ContentProvider -->
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"
@@ -98,6 +117,7 @@
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL"
             tools:ignore="ExportedContentProvider,ProtectedPermissions" />
 
+        <!-- ブート完了レシーバー -->
         <receiver
             android:name=".service.BootReceiver"
             android:exported="true"
@@ -109,4 +129,5 @@
         </receiver>
 
     </application>
+
 </manifest>
