@@ -7,23 +7,21 @@
     android:padding="24dp"
     android:background="?android:attr/colorBackground">
 
-    <!-- タイトル -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="OPPO CTS 設定"
-        android:textSize="24sp"
+        android:textSize="26sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="20dp" />
 
-    <!-- ステップカード -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="24dp"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="2dp">
 
         <LinearLayout
@@ -46,13 +44,41 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/tv_step_desc"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="説明文を読み込み中..."
-                    android:textSize="15sp"
-                    android:lineSpacingExtra="4dp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_step_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="説明文を読み込み中..."
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <!-- ステップ7用のトリガー選択ラジオグループ -->
+                    <RadioGroup
+                        android:id="@+id/rg_trigger_choice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone">
+
+                        <RadioButton
+                            android:id="@+id/rb_trigger_overlay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="ナビバー長押し (推奨・純正感覚)" />
+
+                        <RadioButton
+                            android:id="@+id/rb_trigger_tile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="クイック設定タイル (上部パネル)" />
+                    </RadioGroup>
+                </LinearLayout>
             </ScrollView>
 
             <Button
@@ -65,7 +91,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 下部ナビゲーションボタン（戻る・次へ） -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
