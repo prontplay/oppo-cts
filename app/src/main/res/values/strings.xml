@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OPPO CTS</string>
+    <!-- アプリ名 -->
+    <string name="app_name">CTS Launcher</string>
     <string name="tile_label">かこって検索</string>
 
     <!-- MainActivity用 -->
@@ -26,7 +27,7 @@
     <string name="btn_apply">適用</string>
     <string name="btn_skip">スキップ</string>
     <string name="setup_complete">初期設定が完了しました</string>
-    <string name="setup_title">OPPO CTS セットアップ</string>
+    <string name="setup_title">CTS Launcher セットアップ</string>
     <string name="setup_complete_desc">初期設定が完了しました。設定画面で詳細な調整が可能です。</string>
 
     <!-- Shizuku・アシスタント・GMS関連 -->
@@ -55,7 +56,7 @@
     <string name="setup_step_trigger_desc">起動方法を設定してください。</string>
 
     <!-- 設定画面ステータス互換用 -->
-    <string name="settings_title">OPPO CTS 設定</string>
+    <string name="settings_title">CTS Launcher 設定</string>
     <string name="settings_status">ステータス</string>
     <string name="settings_status_active">有効</string>
     <string name="settings_status_inactive">無効</string>
