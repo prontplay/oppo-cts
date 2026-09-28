@@ -24,7 +24,7 @@ import rikka.shizuku.Shizuku
 class SetupWizardActivity : AppCompatActivity() {
 
     private var currentStep = 1
-    private val totalSteps = 10
+    private val totalSteps = 11 // ④ 音声認識と合成を追加して全11ステップ
 
     private lateinit var tvStepTitle: TextView
     private lateinit var tvStepDesc: TextView
@@ -40,11 +40,9 @@ class SetupWizardActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("cts_prefs", Context.MODE_PRIVATE)
 
-        // セットアップ完了済みの場合の挙動
         if (prefs.getBoolean("setup_completed", false)) {
             val triggerMethod = prefs.getInt("trigger_method", 0)
             if (triggerMethod == 2) {
-                // アプリアイコンタップ: 設定された遅延時間後にCTSを発火
                 val delayMs = prefs.getInt("trigger_delay_ms", 200).toLong()
                 Handler(Looper.getMainLooper()).postDelayed({
                     CTSTrigger.trigger(this)
@@ -113,20 +111,23 @@ class SetupWizardActivity : AppCompatActivity() {
         }
     }
 
+    // ③ ColorOSのGoogle設定画面を確実に開くインテント
     private fun openOppoGoogleSettings() {
-        val intents = arrayOf(
+        val candidates = arrayOf(
             Intent().setComponent(ComponentName("com.coloros.google", "com.coloros.google.GoogleSettingsActivity")),
             Intent().setComponent(ComponentName("com.oplus.google", "com.oplus.google.GoogleSettingsActivity")),
             Intent("com.coloros.settings.GOOGLE_SETTINGS"),
-            Intent("com.android.settings.Settings\$GoogleSettingsActivity"),
+            Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.Settings\$GoogleSettingsActivity")),
+            Intent().setComponent(ComponentName("com.coloros.settings", "com.coloros.settings.SettingsActivity")),
             Intent(Settings.ACTION_SETTINGS)
         )
-        for (intent in intents) {
+        for (intent in candidates) {
             try {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
                 return
             } catch (e: Exception) {
-                // 次の候補を試行
+                // 次を試行
             }
         }
     }
@@ -136,6 +137,7 @@ class SetupWizardActivity : AppCompatActivity() {
         btnNext.text = if (currentStep == totalSteps) "完了" else "次へ"
 
         when (currentStep) {
+            // 1. GMS有効化
             1 -> {
                 tvStepTitle.text = "ステップ 1: GMS（Googleモバイルサービス）の有効化"
                 tvStepDesc.text = "ColorOSでGoogleサービスがオンになっているか確認します。\n\n下のボタンをタップしてOppoのGoogle設定を開き、トグルスイッチがONになっていることを確認してください。"
@@ -143,6 +145,7 @@ class SetupWizardActivity : AppCompatActivity() {
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener { openOppoGoogleSettings() }
             }
+            // 2. Googleアプリ
             2 -> {
                 tvStepTitle.text = "ステップ 2: Googleアプリのインストール"
                 tvStepDesc.text = "かこって検索機能はGoogleアプリに内包されています。\n\nPlayストアから最新の「Google」アプリをインストールまたは更新してください。"
@@ -152,8 +155,19 @@ class SetupWizardActivity : AppCompatActivity() {
                     openGooglePlayStore("com.google.android.googlequicksearchbox")
                 }
             }
+            // 3 (④新設). Speech Recognition & Synthesis
             3 -> {
-                tvStepTitle.text = "ステップ 3: Geminiのインストール (任意)"
+                tvStepTitle.text = "ステップ 3: Speech Recognition & Synthesis の導入"
+                tvStepDesc.text = "かこって検索やアシスタントの音声・マルチモーダル処理に必要な「Google 音声認識と合成（Speech Recognition & Synthesis）」をインストールまたは更新してください。"
+                btnAction.text = "Playストアで開く"
+                btnAction.visibility = View.VISIBLE
+                btnAction.setOnClickListener {
+                    openGooglePlayStore("com.google.android.tts")
+                }
+            }
+            // 4. Gemini
+            4 -> {
+                tvStepTitle.text = "ステップ 4: Geminiのインストール (任意)"
                 tvStepDesc.text = "最新のGeminiをアシスタントとして使用したい場合はインストールしてください（スキップして「次へ」進んでもCTSは動作します）。"
                 btnAction.text = "Playストアで開く"
                 btnAction.visibility = View.VISIBLE
@@ -161,8 +175,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     openGooglePlayStore("com.google.android.apps.bard")
                 }
             }
-            4 -> {
-                tvStepTitle.text = "ステップ 4: Shizukuのインストールと起動"
+            // 5. Shizuku
+            5 -> {
+                tvStepTitle.text = "ステップ 5: Shizukuのインストールと起動"
                 tvStepDesc.text = "ColorOSのシステム制限を回避するためにShizuku（ADB権限）が必要です。\n\nShizukuを起動してワイヤレスデバッグで実行中にしてから [確認] を押してください。"
                 btnAction.text = "確認 / 権限リクエスト"
                 btnAction.visibility = View.VISIBLE
@@ -187,8 +202,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            5 -> {
-                tvStepTitle.text = "ステップ 5: GMSフラグの設定"
+            // 6. GMSフラグ
+            6 -> {
+                tvStepTitle.text = "ステップ 6: GMSフラグの設定"
                 tvStepDesc.text = "中国版端末のGoogleアプリ内で制限されているCircle to Search機能を、Shizuku経由で強制有効化します。"
                 btnAction.text = "適用"
                 btnAction.visibility = View.VISIBLE
@@ -206,8 +222,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            6 -> {
-                tvStepTitle.text = "ステップ 6: 重ねて表示（オーバーレイ）の許可"
+            // 7. 重ねて表示
+            7 -> {
+                tvStepTitle.text = "ステップ 7: 重ねて表示（オーバーレイ）の許可"
                 tvStepDesc.text = "画面最下部のナビゲーションバー上に透明な長押し判定エリアを常駐させるため、「他のアプリの上に重ねて表示」の権限を許可してください。"
                 btnAction.text = "重ねて表示の設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -221,8 +238,9 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            7 -> {
-                tvStepTitle.text = "ステップ 7: ユーザー補助の有効化"
+            // 8. ユーザー補助
+            8 -> {
+                tvStepTitle.text = "ステップ 8: ユーザー補助の有効化"
                 tvStepDesc.text = "ジェスチャーやキー入力を安定して検知させるため、ユーザー補助設定から「OPPO CTS」をONにしてください。"
                 btnAction.text = "ユーザー補助設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -230,22 +248,27 @@ class SetupWizardActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
             }
-            8 -> {
-                tvStepTitle.text = "ステップ 8: デフォルトアシスタントの変更"
-                tvStepDesc.text = "かこって検索を利用するには、端末のデジタルアシスタントをGoogleに指定する必要があります。\n\n[適用]を押すとShizukuを使ってアシスタントをGoogleに変更します。"
-                btnAction.text = "適用"
+            // 9. アシスタント (①: アシスタント設定画面を直接開く)
+            9 -> {
+                tvStepTitle.text = "ステップ 9: デフォルトアシスタントの変更"
+                tvStepDesc.text = "かこって検索を利用するには、端末のデジタルアシスタントを「Google」に指定する必要があります。\n\n下のボタンを押してアシスタント設定を開き、デフォルトのアシスタントアプリを「Google」に設定してください。"
+                btnAction.text = "アシスタント設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
-                    val success = AssistantSetter.setGoogleAssistant()
-                    if (success) {
-                        Toast.makeText(this, "デフォルトアシスタントをGoogleに変更しました", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "変更に失敗しました（Shizukuを確認してください）", Toast.LENGTH_SHORT).show()
+                    try {
+                        startActivity(Intent(Settings.ACTION_VOICE_INPUT_SETTINGS))
+                    } catch (e: Exception) {
+                        try {
+                            startActivity(Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS))
+                        } catch (ex: Exception) {
+                            startActivity(Intent(Settings.ACTION_SETTINGS))
+                        }
                     }
                 }
             }
-            9 -> {
-                tvStepTitle.text = "ステップ 9: バックグラウンド実行の許可"
+            // 10. バックグラウンド
+            10 -> {
+                tvStepTitle.text = "ステップ 10: バックグラウンド実行の許可"
                 tvStepDesc.text = "ColorOSによるタスクキルを防ぎ、常にジェスチャー長押しを有効にするため、電池の最適化を無効化（バックグラウンドでのアクティビティを許可）してください。"
                 btnAction.text = "電池設定を開く"
                 btnAction.visibility = View.VISIBLE
@@ -260,10 +283,10 @@ class SetupWizardActivity : AppCompatActivity() {
                     }
                 }
             }
-            10 -> {
-                // ① ステップ10の文言を指示通りに変更
-                tvStepTitle.text = "すべての準備が整いました！"
-                tvStepDesc.text = "すべての準備が完了しました。\n\n⚠️【初回起動時の注意】\n初めてアプリを起動した際、システムから\n「ユーザー補助へのアクセスを付与されています」\nという確認画面が表示される場合があります。\n\nその際は必ず【オンのままにする】を選択してください。（オフにするとジェスチャー検知が停止します）"
+            // 11. 初回起動時の注意
+            11 -> {
+                tvStepTitle.text = "ステップ 11: すべての準備が整いました！"
+                tvStepDesc.text = "すべての準備が完了しました。\n\n⚠️【初回起動時の注意】\n初めて画面下部を長押しした際、システムから\n「ユーザー補助へのアクセスを付与されています」\nという確認画面が表示される場合があります。\n\nその際は必ず【オンのままにする】を選択してください。（オフにするとジェスチャー検知が停止します）"
                 btnAction.visibility = View.GONE
             }
         }
