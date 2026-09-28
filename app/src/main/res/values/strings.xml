@@ -65,6 +65,12 @@
     <string name="gms_flag_set_failed">GMSフラグの設定に失敗しました。</string>
 
     <!-- メニューテキスト -->
+<resources>
+    <string name="app_name">OPPO CTS</string>
+    <string name="tile_label">かこって検索</string>
     <string name="shortcut_settings_short">設定</string>
     <string name="shortcut_settings_long">OPPO CTS 設定を開く</string>
+    <string name="shortcut_cts_short">かこって検索</string>
+    <string name="shortcut_cts_long">遅延起動でかこって検索</string>
+</resources>
 </resources>
