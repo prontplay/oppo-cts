@@ -50,7 +50,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- アコーディオンヘッダー -->
+                <!-- アコーディオンヘッダー（③: ❌または✅のみ表示） -->
                 <LinearLayout
                     android:id="@+id/layout_status_header"
                     android:layout_width="match_parent"
@@ -66,8 +66,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="設定ステータス: ✅ 正常"
-                        android:textSize="18sp"
+                        android:text="設定ステータス: ✅"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -90,63 +90,130 @@
                     android:visibility="gone"
                     android:layout_marginTop="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="タップで各設定画面を開きます"
-                        android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:layout_marginBottom="8dp" />
-
                     <!-- 1. GMS -->
-                    <TextView
-                        android:id="@+id/tv_gms_status"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="GMS: 確認中..." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_gms_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ GMS" />
+                        <Button
+                            android:id="@+id/btn_gms_settings"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="設定" />
+                    </LinearLayout>
 
                     <!-- 2. Googleアプリ -->
-                    <TextView
-                        android:id="@+id/tv_google_status"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="Google アプリ: 確認中..." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_google_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ Google アプリ" />
+                        <Button
+                            android:id="@+id/btn_google_store"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="ストア" />
+                    </LinearLayout>
 
                     <!-- 3. Google 音声認識と合成 -->
-                    <TextView
-                        android:id="@+id/tv_speech_status"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="Google 音声認識と合成: 確認中..." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_speech_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ Google 音声認識と合成" />
+                        <Button
+                            android:id="@+id/btn_speech_store"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="ストア" />
+                    </LinearLayout>
 
                     <!-- 4. Gemini -->
-                    <TextView
-                        android:id="@+id/tv_gemini_status"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="Gemini: 確認中..." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_gemini_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ Gemini" />
+                        <Button
+                            android:id="@+id/btn_gemini_store"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="ストア" />
+                    </LinearLayout>
 
-                    <!-- 5. Shizuku -->
-                    <TextView
-                        android:id="@+id/tv_shizuku_status"
+                    <!-- 5. Shizuku (④: 詳細文字ステータスを表示) -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="Shizuku: 確認中..." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_shizuku_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="Shizuku: 実行中" />
+                        <Button
+                            android:id="@+id/btn_shizuku_launch"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="起動" />
+                    </LinearLayout>
 
                     <!-- 6. GMSフラグ -->
                     <LinearLayout
@@ -155,15 +222,13 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="4dp">
-
                         <TextView
                             android:id="@+id/tv_flag_status"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="15sp"
-                            android:text="GMSフラグ: 設定済み" />
-
+                            android:text="✅ GMSフラグ" />
                         <Button
                             android:id="@+id/btn_reapply_flag"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -176,41 +241,69 @@
                     </LinearLayout>
 
                     <!-- 7. 重ねて表示 -->
-                    <TextView
-                        android:id="@+id/tv_overlay_permission_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="重ねて表示: 確認中..." />
-
-                    <!-- 8. ユーザー補助 -->
-                    <TextView
-                        android:id="@+id/tv_accessibility_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="6dp"
-                        android:textSize="15sp"
-                        android:text="ユーザー補助: 確認中..." />
-
-                    <!-- 9. アシスタント (①: 設定ボタン付き) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_overlay_permission_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ 重ねて表示" />
+                        <Button
+                            android:id="@+id/btn_overlay_settings"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="設定" />
+                    </LinearLayout>
 
+                    <!-- 8. ユーザー補助 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_accessibility_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="✅ ユーザー補助" />
+                        <Button
+                            android:id="@+id/btn_accessibility_settings"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="設定" />
+                    </LinearLayout>
+
+                    <!-- 9. アシスタント (④: 詳細文字ステータスを表示) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
                         <TextView
                             android:id="@+id/tv_assistant_status"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="15sp"
-                            android:text="アシスタント: 確認中..." />
-
+                            android:text="アシスタント: Google" />
                         <Button
                             android:id="@+id/btn_assistant_settings"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -222,22 +315,20 @@
                             android:text="設定" />
                     </LinearLayout>
 
-                    <!-- 10. バックグラウンド (②: バックグラウンド：許可) -->
+                    <!-- 10. バックグラウンド -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="4dp">
-
                         <TextView
                             android:id="@+id/tv_battery_status"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="15sp"
-                            android:text="バックグラウンド: 許可" />
-
+                            android:text="✅ バックグラウンド: 許可" />
                         <Button
                             android:id="@+id/btn_battery_settings"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -284,7 +375,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- ⑤ 文言変更 -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -413,7 +503,7 @@
                         android:max="10" />
                 </LinearLayout>
 
-                <!-- ⑥ CTS起動テストボタン（ナビバー長押し時は非表示） -->
+                <!-- CTS起動テストボタン（ナビバー長押し時は非表示） -->
                 <Button
                     android:id="@+id/btn_test_cts"
                     android:layout_width="match_parent"
