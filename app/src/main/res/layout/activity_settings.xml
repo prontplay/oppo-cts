@@ -36,7 +36,7 @@
                 android:text="更新" />
         </LinearLayout>
 
-        <!-- ステータス一覧カード -->
+        <!-- ステータス一覧カード（GMS削除済み） -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,32 +90,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="12dp">
 
-                    <!-- 1. GMS -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp">
-                        <TextView
-                            android:id="@+id/tv_gms_status"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="15sp"
-                            android:text="✅ GMS" />
-                        <Button
-                            android:id="@+id/btn_gms_settings"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp"
-                            android:textSize="12sp"
-                            android:text="設定" />
-                    </LinearLayout>
-
-                    <!-- 2. Googleアプリ -->
+                    <!-- 1. Googleアプリ -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -140,7 +115,7 @@
                             android:text="ストア" />
                     </LinearLayout>
 
-                    <!-- 3. Google 音声認識と合成 -->
+                    <!-- 2. Google 音声認識と合成 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -165,7 +140,7 @@
                             android:text="ストア" />
                     </LinearLayout>
 
-                    <!-- 4. Gemini -->
+                    <!-- 3. Gemini -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -190,7 +165,7 @@
                             android:text="ストア" />
                     </LinearLayout>
 
-                    <!-- 5. Shizuku -->
+                    <!-- 4. Shizuku -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -215,7 +190,7 @@
                             android:text="起動" />
                     </LinearLayout>
 
-                    <!-- 6. GMSフラグ（再適用 → 設定に変更） -->
+                    <!-- 5. GMSフラグ -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -231,6 +206,31 @@
                             android:text="✅ GMSフラグ" />
                         <Button
                             android:id="@+id/btn_reapply_flag"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="12sp"
+                            android:text="設定" />
+                    </LinearLayout>
+
+                    <!-- 6. アシスタント (ステップ6に合わせて繰り上げ) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+                        <TextView
+                            android:id="@+id/tv_assistant_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="15sp"
+                            android:text="アシスタント: Google" />
+                        <Button
+                            android:id="@+id/btn_assistant_settings"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
@@ -290,32 +290,7 @@
                             android:text="設定" />
                     </LinearLayout>
 
-                    <!-- 9. アシスタント -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp">
-                        <TextView
-                            android:id="@+id/tv_assistant_status"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="15sp"
-                            android:text="アシスタント: Google" />
-                        <Button
-                            android:id="@+id/btn_assistant_settings"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp"
-                            android:textSize="12sp"
-                            android:text="設定" />
-                    </LinearLayout>
-
-                    <!-- 10. バックグラウンド -->
+                    <!-- 9. バックグラウンド -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -503,6 +478,7 @@
                         android:max="10" />
                 </LinearLayout>
 
+                <!-- CTS起動テストボタン -->
                 <Button
                     android:id="@+id/btn_test_cts"
                     android:layout_width="match_parent"
