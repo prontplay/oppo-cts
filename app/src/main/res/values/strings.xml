@@ -3,64 +3,64 @@
     <string name="app_name">OPPO CTS</string>
     <string name="tile_label">Circle to Search</string>
 
-    <!-- 접근성 서비스 -->
-    <string name="accessibility_service_description">네비게이션 바 길게 누르기를 감지하여 Circle to Search를 실행합니다.</string>
+    <!-- ユーザー補助サービス -->
+    <string name="accessibility_service_description">ナビゲーションバーの長押しを検知してCircle to Searchを起動します。</string>
 
-    <!-- CTS 트리거 -->
-    <string name="cts_trigger_failed">CTS 트리거 실패. Google 앱이 기본 어시스턴트로 설정되어 있는지 확인하세요.</string>
-    <string name="cts_trigger_success">Circle to Search 실행됨</string>
+    <!-- CTSトリガー -->
+    <string name="cts_trigger_failed">CTSの起動に失敗しました。Googleアプリがデフォルトのアシスタントとして設定されていることを確認してください。</string>
+    <string name="cts_trigger_success">Circle to Search が起動しました</string>
 
     <!-- SetupWizard -->
-    <string name="setup_title">OPPO CTS 설정</string>
-    <string name="setup_step_gms">1단계: GMS 활성화</string>
-    <string name="setup_step_gms_desc">중국 롬 기기(ColorOS 등)에서는 구글 서비스가 꺼져 있는 경우가 많습니다.\n\n[설정] → [앱] → [앱 관리] 메뉴로 이동하여 우측 상단의 점 3개 메뉴를 누르고 \'시스템 표시\'를 켠 뒤, \'Google Play 서비스\' 및 \'Google Services Framework\'가 활성화되어 있는지 확인해 주세요.</string>
-    <string name="setup_step_google_app">2단계: Google 앱 설치</string>
-    <string name="setup_step_google_app_desc">서클 투 서치 기능은 구글 앱에 내장되어 있습니다.\n\nPlay 스토어에서 최신 버전의 \'Google\' 앱을 검색하여 설치하거나 업데이트 해주세요. 이미 설치되어 있다면 한 번 실행하여 초기 설정을 완료해 두는 것이 좋습니다.</string>
-    <string name="setup_step_shizuku">3단계: Shizuku 설치 &amp; 시작</string>
-    <string name="setup_step_shizuku_desc">이 앱이 시스템 설정을 우회하기 위해서는 임시로 시스템 수준의 권한(ADB 권한)이 필요합니다.\n\nPlay 스토어나 GitHub에서 \'Shizuku\' 앱을 다운로드 받아 설치한 후, \'무선 디버깅\' 기능을 이용하여 Shizuku를 시작(Running) 상태로 만들어 주세요. 완료 후 아래 [확인]을 눌러 권한을 허용해 주세요.</string>
-    <string name="setup_step_assistant">4단계: 기본 어시스턴트 변경</string>
-    <string name="setup_step_assistant_desc">서클 투 서치는 기기의 기본 디지털 어시스턴트(AI 비서)를 Google로 설정해야 작동합니다.\n\n아래 [적용] 버튼을 누르면 이 앱이 Shizuku 권한을 사용하여 시스템의 기본 디지털 어시스턴트를 Breeno(또는 기타 비서)에서 Google로 강제 변경합니다.</string>
-    <string name="setup_step_gms_flag">5단계: GMS Flag 설정</string>
-    <string name="setup_step_gms_flag_desc">중국 내수용 기기는 기본적으로 구글 앱에서 서클 투 서치 기능이 잠겨 있습니다.\n\n아래 [적용] 버튼을 누르면 Shizuku 권한을 이용해 구글 앱의 내부 플래그(설정값)를 조작하여 서클 투 서치 기능을 강제로 활성화합니다.</string>
-    <string name="setup_step_gemini">6단계: Gemini 설치</string>
-    <string name="setup_step_gemini_desc">구글의 최신 인공지능인 Gemini를 기본 어시스턴트로 사용하려면 Play 스토어에서 \'Google Gemini\' 앱을 설치하세요.\n\n설치하지 않아도 서클 투 서치 기능은 구글 앱을 통해 정상적으로 작동하므로 건너뛰어도 무방합니다.</string>
-    <string name="setup_step_trigger">7단계: 트리거 방식 선택</string>
-    <string name="setup_step_trigger_desc">어떤 방식으로 서클 투 서치를 실행할지 선택합니다.\n\n[네비바 길게 누르기(추천)]\n화면 하단에 보이지 않는 투명 창을 띄워, 순정 폰처럼 홈 바를 꾹 눌러 실행합니다.\n\n[Quick Settings 타일]\n상단바 빠른 설정 창에 버튼을 추가하여 실행합니다.\n\n설정 완료 후에도 앱 내에서 언제든지 변경할 수 있습니다.</string>
-    <string name="setup_complete">설정 완료!</string>
-    <string name="setup_complete_desc">이제 Circle to Search를 사용할 수 있습니다.</string>
+    <string name="setup_title">OPPO CTS 設定</string>
+    <string name="setup_step_gms">ステップ 1: GMSを有効化</string>
+    <string name="setup_step_gms_desc">中国国内向けROM（ColorOSなど）の端末では、Googleサービスがデフォルトで無効になっていることがよくあります。\n\n[設定] → [アプリ] → [アプリ管理] に移動し、右上の3点メニューから「システムアプリを表示」を選択し、「Google Play 開発者サービス」と「Google サービス フレームワーク」が有効になっていることを確認してください。</string>
+    <string name="setup_step_google_app">ステップ 2: Googleアプリをインストール</string>
+    <string name="setup_step_google_app_desc">かこって検索(Circle to Search)の機能はGoogleアプリに組み込まれています。\n\nPlayストアで「Google」アプリを検索し、最新バージョンにインストールまたは更新してください。すでにインストールされている場合は、一度起動して初期設定を完了させておくことをお勧めします。</string>
+    <string name="setup_step_shizuku">ステップ 3: Shizukuのインストールと起動</string>
+    <string name="setup_step_shizuku_desc">このアプリはシステム設定をバイパスするために、一時的なシステムレベルの権限（ADB権限）を必要とします。\n\nPlayストアまたはGitHubから「Shizuku」アプリをインストールし、「ワイヤレスデバッグ」機能を使ってShizukuを「実行中(Running)」にしてください。完了後、下の[確認]をタップして権限を許可してください。</string>
+    <string name="setup_step_assistant">ステップ 4: デフォルトアシスタントの変更</string>
+    <string name="setup_step_assistant_desc">かこって検索を使用するには、端末のデフォルトのデジタルアシスタントをGoogleに設定する必要があります。\n\n下の[適用]をタップすると、このアプリはShizukuの権限を使用して、システムのアシスタントをBreeno（またはその他）からGoogleに強制的に変更します。</string>
+    <string name="setup_step_gms_flag">ステップ 5: GMSフラグの設定</string>
+    <string name="setup_step_gms_flag_desc">中国向け端末のGoogleアプリでは、かこって検索機能がデフォルトでロックされています。\n\n下の[適用]をタップして、Shizukuの権限でGoogleアプリの内部フラグを変更します。これにより機能が強制的にロック解除されます。</string>
+    <string name="setup_step_gemini">ステップ 6: Geminiのインストール</string>
+    <string name="setup_step_gemini_desc">Googleの最新AIであるGeminiをデフォルトアシスタントとして使いたい場合は、Playストアから「Google Gemini」アプリをインストールしてください。\n\nこれをスキップしても、かこって検索は通常のGoogleアプリを通じて正常に動作します。</string>
+    <string name="setup_step_trigger">ステップ 7: トリガー方法の選択</string>
+    <string name="setup_step_trigger_desc">かこって検索の起動方法を選択してください。\n\n[ナビバーを長押し (推奨)]\n画面下部に透明なレイヤーを配置し、純正デバイスと同じようにホームバーを長押しして起動できます。\n\n[クイック設定タイル]\n通知パネルのクイック設定にボタンを追加して起動します。\n\n設定後もアプリ内でいつでも変更可能です。</string>
+    <string name="setup_complete">設定完了！</string>
+    <string name="setup_complete_desc">Circle to Searchを使用できるようになりました。</string>
 
-    <!-- 버튼 -->
-    <string name="btn_next">다음</string>
-    <string name="btn_back">이전</string>
-    <string name="btn_done">완료</string>
-    <string name="btn_skip">건너뛰기</string>
-    <string name="btn_check">확인</string>
-    <string name="btn_install">설치</string>
-    <string name="btn_apply">적용</string>
+    <!-- ボタン -->
+    <string name="btn_next">次へ</string>
+    <string name="btn_back">戻る</string>
+    <string name="btn_done">完了</string>
+    <string name="btn_skip">スキップ</string>
+    <string name="btn_check">確認</string>
+    <string name="btn_install">インストール</string>
+    <string name="btn_apply">適用</string>
 
-    <!-- 설정 -->
-    <string name="settings_title">설정</string>
-    <string name="settings_trigger_method">트리거 방식</string>
-    <string name="settings_trigger_gesture">네비바 길게 누르기</string>
-    <string name="settings_trigger_tile">Quick Settings 타일</string>
-    <string name="settings_trigger_app">앱 아이콘 탭</string>
-    <string name="settings_status">상태</string>
-    <string name="settings_status_google">Google 앱</string>
+    <!-- 設定画面 -->
+    <string name="settings_title">設定</string>
+    <string name="settings_trigger_method">トリガー方法</string>
+    <string name="settings_trigger_gesture">ナビバーを長押し</string>
+    <string name="settings_trigger_tile">クイック設定タイル</string>
+    <string name="settings_trigger_app">アプリアイコンをタップ</string>
+    <string name="settings_status">ステータス</string>
+    <string name="settings_status_google">Google アプリ</string>
     <string name="settings_status_gms">GMS</string>
     <string name="settings_status_shizuku">Shizuku</string>
-    <string name="settings_status_accessibility">접근성 서비스</string>
-    <string name="settings_status_active">활성</string>
-    <string name="settings_status_inactive">비활성</string>
-    <string name="settings_status_not_installed">미설치</string>
-    <string name="settings_rerun_setup">설정 다시 실행</string>
+    <string name="settings_status_accessibility">ユーザー補助サービス</string>
+    <string name="settings_status_active">有効</string>
+    <string name="settings_status_inactive">無効</string>
+    <string name="settings_status_not_installed">未インストール</string>
+    <string name="settings_rerun_setup">設定を再実行</string>
 
-    <!-- 상태 메시지 -->
-    <string name="shizuku_not_installed">Shizuku가 설치되어 있지 않습니다.</string>
-    <string name="shizuku_not_running">Shizuku가 실행 중이 아닙니다.</string>
-    <string name="shizuku_permission_denied">Shizuku 권한이 거부되었습니다.</string>
-    <string name="google_app_not_found">Google 앱을 찾을 수 없습니다.</string>
-    <string name="assistant_set_success">기본 어시스턴트가 Google로 변경되었습니다.</string>
-    <string name="assistant_set_failed">어시스턴트 변경에 실패했습니다.</string>
-    <string name="gms_flag_set_success">GMS Flag가 설정되었습니다.</string>
-    <string name="gms_flag_set_failed">GMS Flag 설정에 실패했습니다.</string>
+    <!-- ステータスメッセージ -->
+    <string name="shizuku_not_installed">Shizukuがインストールされていません。</string>
+    <string name="shizuku_not_running">Shizukuが実行されていません。</string>
+    <string name="shizuku_permission_denied">Shizukuの権限が拒否されました。</string>
+    <string name="google_app_not_found">Googleアプリが見つかりません。</string>
+    <string name="assistant_set_success">デフォルトのアシスタントをGoogleに変更しました。</string>
+    <string name="assistant_set_failed">アシスタントの変更に失敗しました。</string>
+    <string name="gms_flag_set_success">GMSフラグが設定されました。</string>
+    <string name="gms_flag_set_failed">GMSフラグの設定に失敗しました。</string>
 </resources>
