@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="?android:attr/colorBackground">
 
     <LinearLayout
@@ -19,7 +20,7 @@
             android:textStyle="bold"
             android:layout_marginBottom="20dp" />
 
-        <!-- ステータス一覧カード -->
+        <!-- ステータスカード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -166,7 +167,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 管理・テストカード -->
+        <!-- 操作 & テストカード -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
