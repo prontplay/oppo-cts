@@ -170,7 +170,7 @@ class SetupWizardActivity : AppCompatActivity() {
             // 6. ユーザー補助
             6 -> {
                 tvStepTitle.text = "ステップ 6: ユーザー補助の有効化"
-                tvStepDesc.text = "ジェスチャーやキー入力を安定して検知させるため、ユーザー補助設定から「OPPO CTS」をONにしてください。"
+                tvStepDesc.text = "ジェスチャーやキー入力を安定して検知させるため、ユーザー補助設定から「CTS Launcher」をONにしてください。"
                 btnAction.text = "ユーザー補助設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
@@ -180,7 +180,7 @@ class SetupWizardActivity : AppCompatActivity() {
             // 7. バックグラウンド
             7 -> {
                 tvStepTitle.text = "ステップ 7: バックグラウンド実行の許可"
-                tvStepDesc.text = "ColorOSによるタスクキルを防ぎ、常にジェスチャー長押しを有効にするため、電池の最適化を無効化（バックグラウンドでのアクティビティを許可）してください。"
+                tvStepDesc.text = "システムによるタスクキルを防ぎ、常にジェスチャー長押しを有効にするため、電池の最適化を無効化（バックグラウンドでのアクティビティを許可）してください。"
                 btnAction.text = "電池設定を開く"
                 btnAction.visibility = View.VISIBLE
                 btnAction.setOnClickListener {
