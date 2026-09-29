@@ -2,7 +2,7 @@
 <resources>
 
     <!-- 기본 테마 (Material 3 라이트) -->
-    <style name="Theme.OppoCTS" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.CTSLauncher" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -12,7 +12,7 @@
     </style>
 
     <!-- 투명 테마 (MainActivity용 — 사용자에게 보이지 않음) -->
-    <style name="Theme.OppoCTS.Transparent">
+    <style name="Theme.CTSLauncher.Transparent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
