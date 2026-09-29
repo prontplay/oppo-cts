@@ -374,7 +374,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💡 クイック設定タイルの使い方\n端末の画面上部からコントロールセンターを引き下げ、編集メニューから「OPPO CTS」タイルを追加してご使用ください。"
+                        android:text="💡 クイック設定タイルの使い方\n端末の画面上部からコントロールセンターを引き下げ、編集メニューから「CTS Launcher」タイルを追加してご使用ください。"
                         android:textSize="13sp"
                         android:lineSpacingExtra="3dp" />
                 </LinearLayout>
