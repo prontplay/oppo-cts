@@ -1,4 +1,4 @@
-package com.oppocts.service
+package com.ctslauncher.service
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -22,8 +22,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
-import com.oppocts.R
-import com.oppocts.trigger.CTSTrigger
+import com.ctslauncher.R
+import com.ctslauncher.trigger.CTSTrigger
 
 class OverlayTriggerService : Service() {
 
@@ -44,10 +44,8 @@ class OverlayTriggerService : Service() {
 
     private var initialX = 0f
     private var initialY = 0f
-    private var isLongPressDetected = false
 
     private val longPressRunnable = Runnable {
-        isLongPressDetected = true
         Log.d(TAG, "Bottom bar long-press detected! Triggering CTS...")
         triggerCTS()
     }
@@ -79,8 +77,8 @@ class OverlayTriggerService : Service() {
         }
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("CTS Launcher")
-            .setContentText("トリガーサービス実行中")
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.notification_running_text))
             .setSmallIcon(R.drawable.ic_cts)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .build()
@@ -102,7 +100,6 @@ class OverlayTriggerService : Service() {
                     MotionEvent.ACTION_DOWN -> {
                         initialX = event.x
                         initialY = event.y
-                        isLongPressDetected = false
                         handler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT_MS)
                         true
                     }
