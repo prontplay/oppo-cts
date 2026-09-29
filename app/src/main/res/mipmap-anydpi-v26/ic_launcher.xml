@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 앱 아이콘 (Circle to Search 스타일 — 파란 원 + 흰색 돋보기) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 배경 원 (Google Blue) -->
+    <path
+        android:fillColor="#4285F4"
+        android:pathData="M54,54m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0" />
+
+    <!-- 돋보기 원 -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:pathData="M48,48m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0" />
+
+    <!-- 돋보기 손잡이 -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M59,59L70,70" />
+
+</vector>
