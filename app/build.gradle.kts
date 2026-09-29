@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.oppocts"
+    namespace = "com.ctslauncher"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.oppocts"
+        applicationId = "com.ctslauncher"
         minSdk = 28
         targetSdk = 35
         versionCode = 2
-        versionName = "1.0.1"
+        versionName = "1.0.0"
     }
 
     buildTypes {
@@ -56,10 +56,10 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
 
-    // Shizuku — 런타임에 실제로 사용하므로 implementation으로 선언
+    // Shizuku — 実行時に実際に使用されるため、implementation として宣言
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")
 
-    // Hidden API bypass (MiCTS와 동일)
+    // Hidden API bypass(MiCTSと同じ)
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
 }
