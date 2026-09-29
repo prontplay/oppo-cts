@@ -1,10 +1,9 @@
-package com.oppocts.service
+package com.ctslauncher.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import com.oppocts.trigger.CTSTrigger
 
 class OppoAccessibilityService : AccessibilityService() {
 
@@ -12,8 +11,7 @@ class OppoAccessibilityService : AccessibilityService() {
         private const val TAG = "OppoAccessibilityService"
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-    }
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
     override fun onInterrupt() {
         Log.d(TAG, "Accessibility Service Interrupted")
