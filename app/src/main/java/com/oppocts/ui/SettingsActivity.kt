@@ -1,4 +1,4 @@
-package com.oppocts.ui
+package com.ctslauncher.ui
 
 import android.content.ComponentName
 import android.content.Context
@@ -15,10 +15,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.oppocts.R
-import com.oppocts.service.OverlayTriggerService
-import com.oppocts.shizuku.GmsFlagSetter
-import com.oppocts.trigger.CTSTrigger
+import com.ctslauncher.R
+import com.ctslauncher.service.OverlayTriggerService
+import com.ctslauncher.shizuku.GmsFlagSetter
+import com.ctslauncher.trigger.CTSTrigger
 import rikka.shizuku.Shizuku
 
 class SettingsActivity : AppCompatActivity() {
@@ -472,7 +472,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // 6. ユーザー補助
         val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
-        val isA11yActive = enabledServices.contains("com.oppocts.service.OppoAccessibilityService")
+        val isA11yActive = enabledServices.contains("com.ctslauncher.service.OppoAccessibilityService")
         tvAccessibilityStatus.text = if (isA11yActive) "✅ ユーザー補助" else { hasError = true; "❌ ユーザー補助" }
         btnAccessibilitySettings.visibility = View.VISIBLE
 
