@@ -16,7 +16,7 @@
     <string name="shortcut_settings_short">設定</string>
     <string name="shortcut_settings_long">設定を開く</string>
     <string name="shortcut_cts_short">かこって検索</string>
-    <string name="shortcut_cts_long">かこって検索を起動</string>
+    <string name="shortcut_cts_long">かこって検索</string>
 
     <!-- 汎用ボタン・メッセージ -->
     <string name="btn_next">次へ</string>
