@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 기본 색상 (Google Blue 계열) -->
+    <color name="primary">#4285F4</color>
+    <color name="primary_dark">#3367D6</color>
+    <color name="primary_light">#8AB4F8</color>
+    <color name="accent">#34A853</color>
+
+    <!-- 배경 -->
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#121212</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_dark">#1E1E1E</color>
+
+    <!-- 텍스트 -->
+    <color name="text_primary_light">#212121</color>
+    <color name="text_secondary_light">#757575</color>
+    <color name="text_primary_dark">#FFFFFF</color>
+    <color name="text_secondary_dark">#B0B0B0</color>
+
+    <!-- 상태 색상 -->
+    <color name="status_active">#34A853</color>
+    <color name="status_inactive">#EA4335</color>
+    <color name="status_warning">#FBBC05</color>
+
+    <!-- 투명 -->
+    <color name="transparent">#00000000</color>
+</resources>

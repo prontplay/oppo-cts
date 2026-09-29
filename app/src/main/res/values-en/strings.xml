@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OPPO CTS</string>
+    <string name="tile_label">Circle to Search</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">Detects long-press on the navigation bar to launch Circle to Search.</string>
+
+    <!-- CTS Trigger -->
+    <string name="cts_trigger_failed">CTS trigger failed. Please ensure the Google app is set as the default assistant.</string>
+    <string name="cts_trigger_success">Circle to Search launched</string>
+
+    <!-- SetupWizard -->
+    <string name="setup_title">OPPO CTS Setup</string>
+    <string name="setup_step_gms">Step 1: Enable GMS</string>
+    <string name="setup_step_gms_desc">On Chinese ROM devices (like ColorOS), Google services are often disabled by default.\n\nGo to [Settings] → [Apps] → [App Management], tap the three-dot menu at the top right, select \'Show System\', and ensure both \'Google Play services\' and \'Google Services Framework\' are enabled.</string>
+    <string name="setup_step_google_app">Step 2: Install Google App</string>
+    <string name="setup_step_google_app_desc">The Circle to Search feature is built into the Google app.\n\nPlease search for the \'Google\' app in the Play Store and install or update it to the latest version. If it\'s already installed, it\'s recommended to open it once to complete its initial setup.</string>
+    <string name="setup_step_shizuku">Step 3: Install &amp; Start Shizuku</string>
+    <string name="setup_step_shizuku_desc">This app requires temporary system-level permissions (ADB permissions) to bypass system settings.\n\nDownload and install the \'Shizuku\' app from the Play Store or GitHub. Start Shizuku using the \'Wireless Debugging\' feature until it shows \'Running\'. Then tap [Check] below to grant permission.</string>
+    <string name="setup_step_assistant">Step 4: Change Default Assistant</string>
+    <string name="setup_step_assistant_desc">Circle to Search requires the device\'s Default Digital Assistant to be set to Google.\n\nTap [Apply] below, and this app will use Shizuku permissions to force-change your system\'s digital assistant from Breeno (or others) to Google.</string>
+    <string name="setup_step_gms_flag">Step 5: Set GMS Flag</string>
+    <string name="setup_step_gms_flag_desc">Circle to Search is locked by default in the Google app on Chinese region devices.\n\nTap [Apply] below to modify the internal flags of the Google app using Shizuku permissions. This will forcefully unlock the Circle to Search feature.</string>
+    <string name="setup_step_gemini">Step 6: Install Gemini</string>
+    <string name="setup_step_gemini_desc">If you want to use Google\'s latest AI, Gemini, as your default assistant, install the \'Google Gemini\' app from the Play Store.\n\nIf you skip this, Circle to Search will still work perfectly fine via the standard Google app.</string>
+    <string name="setup_step_trigger">Step 7: Choose Trigger Method</string>
+    <string name="setup_step_trigger_desc">Choose how you want to interact with Circle to Search.\n\n[Long-press Navbar (Recommended)]\nCreates an invisible overlay at the bottom so you can long-press the home bar just like on native devices.\n\n[Quick Settings Tile]\nAdds a button to your notification drop-down menu.\n\nYou can change this anytime in the app settings later.</string>
+    <string name="setup_complete">Setup Complete!</string>
+    <string name="setup_complete_desc">You can now use Circle to Search.</string>
+
+    <!-- Buttons -->
+    <string name="btn_next">Next</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_skip">Skip</string>
+    <string name="btn_check">Check</string>
+    <string name="btn_install">Install</string>
+    <string name="btn_apply">Apply</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_trigger_method">Trigger Method</string>
+    <string name="settings_trigger_gesture">Long-press Navbar</string>
+    <string name="settings_trigger_tile">Quick Settings Tile</string>
+    <string name="settings_trigger_app">Tap App Icon</string>
+    <string name="settings_status">Status</string>
+    <string name="settings_status_google">Google App</string>
+    <string name="settings_status_gms">GMS</string>
+    <string name="settings_status_shizuku">Shizuku</string>
+    <string name="settings_status_accessibility">Accessibility Service</string>
+    <string name="settings_status_active">Active</string>
+    <string name="settings_status_inactive">Inactive</string>
+    <string name="settings_status_not_installed">Not Installed</string>
+    <string name="settings_rerun_setup">Rerun Setup</string>
+
+    <!-- Status Messages -->
+    <string name="shizuku_not_installed">Shizuku is not installed.</string>
+    <string name="shizuku_not_running">Shizuku is not running.</string>
+    <string name="shizuku_permission_denied">Shizuku permission denied.</string>
+    <string name="google_app_not_found">Google app not found.</string>
+    <string name="assistant_set_success">Default assistant changed to Google.</string>
+    <string name="assistant_set_failed">Failed to change assistant.</string>
+    <string name="gms_flag_set_success">GMS flag set successfully.</string>
+    <string name="gms_flag_set_failed">Failed to set GMS flag.</string>
+</resources>
