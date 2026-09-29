@@ -1,82 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission
-        android:name="moe.shizuku.manager.permission.API_V23"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
-    <queries>
-        <package android:name="com.google.android.googlequicksearchbox" />
-        <package android:name="com.google.android.apps.bard" />
-        <package android:name="com.google.android.gms" />
-        <package android:name="moe.shizuku.privileged.api" />
-    </queries>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application
-        android:allowBackup="false"
+        android:name="com.ctslauncher.MainApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.OppoCTS"
-        tools:targetApi="35">
+        android:theme="@style/Theme.CTSLauncher">
 
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.OppoCTS.Transparent"
-            android:excludeFromRecents="true"
-            android:taskAffinity="" />
-
-        <activity
-            android:name=".ui.TriggerActivity"
-            android:exported="true"
-            android:theme="@style/Theme.OppoCTS.Transparent"
-            android:excludeFromRecents="true"
-            android:label="Trigger CTS (No Shizuku)"
-            android:taskAffinity="" />
-
-        <activity
-            android:name=".ui.SetupWizardActivity"
-            android:exported="true"
-            android:theme="@style/Theme.OppoCTS">
+            android:name="com.ctslauncher.ui.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- アプリアイコン長押しショートカットの登録 -->
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
         </activity>
 
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name="com.ctslauncher.ui.SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.ctslauncher.ui.SetupWizardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.ctslauncher.ui.TriggerActivity"
+            android:exported="false" />
+
+        <service
+            android:name="com.ctslauncher.service.OverlayTriggerService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+
+        <service
+            android:name="com.ctslauncher.service.OppoAccessibilityService"
             android:exported="true"
-            android:theme="@style/Theme.OppoCTS" />
-
-        <service
-            android:name=".trigger.CTSTTileService"
-            android:icon="@drawable/ic_cts"
-            android:label="@string/tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name=".service.OppoAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="false">
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -86,32 +57,15 @@
         </service>
 
         <service
-            android:name=".service.OverlayTriggerService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Floating trigger for Circle to Search" />
-        </service>
-
-        <provider
-            android:name="rikka.shizuku.ShizukuProvider"
-            android:authorities="${applicationId}.shizuku"
-            android:multiprocess="false"
-            android:enabled="true"
+            android:name="com.ctslauncher.trigger.CTSTileService"
             android:exported="true"
-            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL"
-            tools:ignore="ExportedContentProvider,ProtectedPermissions" />
-
-        <receiver
-            android:name=".service.BootReceiver"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
+            android:icon="@drawable/ic_tile_service"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-        </receiver>
+        </service>
 
     </application>
 
